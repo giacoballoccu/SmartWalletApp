@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Valuta(models.Model):
     sigla = None
     cambio = None
