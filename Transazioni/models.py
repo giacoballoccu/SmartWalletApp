@@ -1,6 +1,6 @@
 from django.db import models
 
-
+'''
 # Create your models here.
 class Transazione(models.Model):
     id = None
@@ -20,3 +20,4 @@ class Transazione(models.Model):
     @staticmethod
     def crea_transazione(mandante, destinatario, valuta, importo, causale):
         None
+'''

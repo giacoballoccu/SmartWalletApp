@@ -73,13 +73,16 @@ class WalletModelTest(TestCase):
         # controlla che ci sia l'importo nel conto aggiunto
         self.assertEqual(wallet_mario.conti.get(tipo_valuta=self.bitcoin).importo, 1.0)
 
+    def test_get_conto_funzione(self):
+        None
+
     def test_aggiunta_conto_con_funzione(self):
         wallet_mario = Wallet.objects.create(user_id=self.mario, cambio_selezionato=self.dollaro)
         wallet_mario.aggiungi_conto(self.bitcoin, 1.0)
         # controlla che il conto sia stato creato
         self.assertEqual(wallet_mario.conti.all().count(), 1)
         # controlla che ci sia l'importo nel conto aggiunto
-        self.assertEqual(wallet_mario.conti.get(tipoValuta=self.bitcoin).importo, 1.0)
+        self.assertEqual(wallet_mario.conti.get(tipo_valuta=self.bitcoin).importo, 1.0)
 
     def test_modifica_cambio_selezionato(self):
         wallet_mario = Wallet.objects.create(user_id=self.mario, cambio_selezionato=self.dollaro)
@@ -90,13 +93,13 @@ class WalletModelTest(TestCase):
     def test_modifica_cambio_selezionato_con_funzione(self):
         wallet_mario = Wallet.objects.create(user_id=self.mario, cambio_selezionato=self.dollaro)
         self.assertEqual(wallet_mario.cambio_selezionato, self.dollaro)
-        self.wallet_mario.modifica_cambio_selezionato(self.bitcoin)
+        wallet_mario.modifica_cambio_selezionato(self.bitcoin)
         self.assertEqual(wallet_mario.cambio_selezionato, self.bitcoin)
 
     def test_calcolo_totale_wallet(self):
         wallet_mario = Wallet.objects.create(user_id=self.mario, cambio_selezionato=self.dollaro)
         conto = Conto.objects.create(tipo_valuta=self.bitcoin, importo=1.0, wallet_associato=wallet_mario)
-        conto = Conto.objects.create(tipo_valuta=self.dollaro, importo=1.0, wallet_associato=wallet_mario)
+        conto = Conto.objects.create(tipo_valuta=self.dollaro, importo=8000.0, wallet_associato=wallet_mario)
         self.assertEqual(wallet_mario.conti.all().count(), 2)
         # controllo cambio con il dollaro
         wallet_mario.cambio_selezionato=self.dollaro
@@ -116,6 +119,11 @@ class WalletModelTest(TestCase):
         self.assertEqual(wallet_mario.conti.all().count(), 1)
         # controllo errore se il conto di quella valuta non esiste
         self.assertEqual(0, wallet_mario.conti.filter(tipo_valuta=self.dollaro).count())
+
+    def test_get_lista_transazioni(self):
+        None
+
+    
 
 class ContoModelTest(TestCase):
     @classmethod

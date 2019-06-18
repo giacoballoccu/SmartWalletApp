@@ -12,7 +12,6 @@ class Valuta(models.Model):
     class Meta:
         ordering = ('sigla',)
 
-
     def __str__(self):
         return self.sigla
 
@@ -20,11 +19,11 @@ class Valuta(models.Model):
         return (float)(self.cambio/valuta.cambio)
 
 
-
 class Wallet(models.Model):
     wallet_id = models.CharField(max_length=35, null=False, unique=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     cambio_selezionato = models.ForeignKey(Valuta, on_delete=models.CASCADE)
+    transazione_ingresso = models.ManyToManyField('Wallet', null=True, through='Transazione', related_name="transazione_uscita",symmetrical=False)
 
     def __str__(self):
         return self.wallet_id
@@ -37,20 +36,26 @@ class Wallet(models.Model):
         totale = 0
         for conto in self.conti.all():
             totale += conto.calcola_totale_conto(self.cambio_selezionato)
-
         return totale
 
-    def aggiungi_conto(self,valuta,importo):
-        self.conti.add(Conto.crea_conto(valuta, importo, self.wallet_id))
+    def aggiungi_conto(self, valuta, importo):
+        Conto.crea_conto(valuta, importo, self)
 
-    def rimuovi_conto(self,valuta):
-        self.conti.remove(self.conti.filter(tipo_valuta=valuta))
+    def rimuovi_conto(self, valuta):
+        self.conti.get(tipo_valuta=valuta).delete()
 
     def modifica_cambio_selezionato(self,valuta):
         self.cambio_selezionato = valuta
 
     def avvia_transazione(self,utente_destinatario,valuta,importo):
         None
+
+    def get_transazioni_uscita(self):
+        return self.transazione_uscita.all()
+
+    def get_transazioni_ingresso(self):
+        return self.transazione_ingresso.all()
+
 
 class Conto(models.Model):
     tipo_valuta = models.ForeignKey(Valuta, on_delete=models.CASCADE, default=None)
@@ -63,8 +68,8 @@ class Conto(models.Model):
     class Meta:
         unique_together = ('tipo_valuta', 'wallet_associato')
 
-    def calcola_totale_conto(self,valuta):
-        return valuta.cambio * self.importo
+    def calcola_totale_conto(self,valuta):  # calcola il totale nella valuta richiesta
+        return (float(self.tipo_valuta.cambio)/float(valuta.cambio))*float(self.importo)
 
     def aggiungi_importo(self,importo):
         self.importo += importo
@@ -75,12 +80,13 @@ class Conto(models.Model):
         else:
             self.importo -= importo
 
-    def get_url(self): #?
+    # probabilmente non verrà utilizzata
+    def get_url(self):  # restituisce l'url per l'editing/deleting dell'oggetto
         None
 
     @staticmethod
-    def crea_conto(tipo_valuta, importo):
-       return Conto(tipo_valuta=tipo_valuta, importo=importo)
+    def crea_conto(tipo_valuta, importo, wallet):  # metodo statico per la generazione di un nuovo conto
+       return Conto.objects.create(tipo_valuta=tipo_valuta, importo=importo,wallet_associato=wallet)
 
 class Transazione(models.Model):
     id_transazione = models.CharField(max_length=32, null=False, unique=True)
