@@ -6,7 +6,7 @@ class Valuta(models.Model):
     cambio = None
     nome = None
 
-    def __unicode__(self):
+    def __str__(self):
         None
 
     def converti_cambio(self,valuta):
@@ -19,7 +19,7 @@ class Conto(models.Model):
     # id = None
     # wallet_id = None
 
-    def __unicode__(self):
+    def __str__(self):
         None
 
     def calcola_totale_conto(self,valuta):
@@ -49,7 +49,7 @@ class Wallet(models.Model):
     conti = None
     cambio_selezionato = None
 
-    def __unicode__(self):
+    def __str__(self):
         None
 
     def calcola_totale_wallet(self):
@@ -65,4 +65,8 @@ class Wallet(models.Model):
         None
 
     def avvia_transazione(self,utente_destinatario,valuta,importo):
+        None
+
+    @staticmethod
+    def crea_utente(username,password):
         None
