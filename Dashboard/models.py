@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 from django.contrib.auth.models import User
 
@@ -13,6 +12,7 @@ class Valuta(models.Model):
     class Meta:
         ordering = ('sigla',)
 
+
     def __str__(self):
         return self.sigla
 
@@ -21,51 +21,9 @@ class Valuta(models.Model):
 
 
 
-
-class Conto(models.Model):
-    tipo_valuta = models.ForeignKey(Valuta, on_delete=models.CASCADE, default=None)
-    importo = models.DecimalField(default=0,decimal_places=15, max_digits=30)
-    wallet_associato = models.ManyToManyField('Wallet')
-
-
-
-    def __str__(self):
-        return self.tipo_valuta.sigla
-
-    def create(tipo_valuta, importo, wallet_associato):
-       return Conto(tipo_valuta=tipo_valuta, importo=importo, wallet_associato=wallet_associato)
-
-    def calcola_totale_conto(self,valuta):
-        None
-
-    def aggiungi_importo(self,importo):
-        None
-
-    def rimuovi_importo(self,importo):
-        None
-
-    def get_url(self): #?
-        None
-
-    @staticmethod
-    def crea_conto(utente,valuta,importo):
-        None
-
-    @staticmethod
-    def rimuovi_conto(utente, valuta):
-        None
-
-
-
-
-    @staticmethod
-    def crea_utente(username,password):
-        None
-
 class Wallet(models.Model):
     wallet_id = models.CharField(max_length=35, null=False, unique=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    conti = models.ManyToManyField(Conto, related_name='conti')
     cambio_selezionato = models.ForeignKey(Valuta, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -78,21 +36,51 @@ class Wallet(models.Model):
     def calcola_totale_wallet(self):
         totale = 0
         for conto in self.conti.all():
-            totale += conto.importo * conto.tipo_valuta.cambio
+            totale += conto.calcola_totale_conto(conto, conto.tipo_valuta)
 
         return totale * self.cambio_selezionato
 
     def aggiungi_conto(self,valuta,importo):
-        self.conti.add(Conto(valuta, importo, self.wallet_id))
+        self.conti.add(Conto.crea_conto(valuta, importo, self.wallet_id))
 
     def rimuovi_conto(self,valuta):
-        self.conti.remove(self.conti.filter(tipo_valuta=valuta, wallet_associato=self.wallet_id))
+        self.conti.remove(self.conti.filter(tipo_valuta=valuta))
 
     def modifica_cambio_selezionato(self,valuta):
         self.cambio_selezionato = valuta
 
     def avvia_transazione(self,utente_destinatario,valuta,importo):
         None
+
+class Conto(models.Model):
+    tipo_valuta = models.ForeignKey(Valuta, on_delete=models.CASCADE, default=None)
+    importo = models.DecimalField(default=0, decimal_places=15, max_digits=30)
+    wallet_associato = models.ForeignKey(Wallet, related_name='conti', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.tipo_valuta.sigla
+
+    class Meta:
+        unique_together = ('tipo_valuta', 'wallet_associato')
+
+    def calcola_totale_conto(self,valuta):
+        self.tipo_valuta.cambio * self.importo
+
+    def aggiungi_importo(self,importo):
+        self.importo += importo
+
+    def rimuovi_importo(self,importo):
+        if (self.importo < importo):
+            raise Exception('Il wallet non ha abbastanza fondi')
+        else:
+            self.importo -= importo
+
+    def get_url(self): #?
+        None
+
+    @staticmethod
+    def crea_conto(tipo_valuta, importo):
+       return Conto(tipo_valuta=tipo_valuta, importo=importo)
 
 class Transazione(models.Model):
     id_transazione = models.CharField(max_length=32, null=False, unique=True)
@@ -105,3 +93,8 @@ class Transazione(models.Model):
 
     def __str__(self):
         return self.id_transazione
+
+
+    @staticmethod
+    def crea_utente(username,password):
+        None
