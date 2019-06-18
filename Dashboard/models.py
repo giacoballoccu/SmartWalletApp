@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 
 class Valuta(models.Model):
-    sigla = models.CharField(max_length=5,  null=False, unique=True)
+    sigla = models.CharField(max_length=3,  null=False, unique=True)
     cambio = models.DecimalField(decimal_places=15, max_digits=30)
     nome = models.CharField(max_length=25)
 
@@ -16,8 +16,8 @@ class Valuta(models.Model):
     def __str__(self):
         return self.sigla
 
-    def converti_cambio(self,valuta):
-        self.cambio = valuta.cambio/self.cambio
+    def converti_cambio(self, valuta):
+        return (float)(self.cambio/valuta.cambio)
 
 
 
@@ -36,9 +36,9 @@ class Wallet(models.Model):
     def calcola_totale_wallet(self):
         totale = 0
         for conto in self.conti.all():
-            totale += conto.calcola_totale_conto(conto, conto.tipo_valuta)
+            totale += conto.calcola_totale_conto(self.cambio_selezionato)
 
-        return totale * self.cambio_selezionato
+        return totale
 
     def aggiungi_conto(self,valuta,importo):
         self.conti.add(Conto.crea_conto(valuta, importo, self.wallet_id))
@@ -64,7 +64,7 @@ class Conto(models.Model):
         unique_together = ('tipo_valuta', 'wallet_associato')
 
     def calcola_totale_conto(self,valuta):
-        self.tipo_valuta.cambio * self.importo
+        return valuta.cambio * self.importo
 
     def aggiungi_importo(self,importo):
         self.importo += importo
