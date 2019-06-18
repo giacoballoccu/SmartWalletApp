@@ -12,7 +12,7 @@ class Valuta(models.Model):
     class Meta:
         ordering = ('sigla',)
 
-    def __unicode__(self):
+    def __str__(self):
         None
 
     def converti_cambio(self,valuta):
@@ -23,7 +23,7 @@ class Conto(models.Model):
     tipo_valuta = models.ForeignKey(Valuta, on_delete=models.CASCADE, null=False)
     importo = models.IntegerField(default=0)
 
-    def __unicode__(self):
+    def __str__(self):
         None
 
     def calcola_totale_conto(self,valuta):
@@ -47,14 +47,13 @@ class Conto(models.Model):
         None
 
 
-
 class Wallet(models.Model):
     wallet_id = models.CharField(max_length=35, null=False, unique=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     conti = models.ForeignKey(Conto, on_delete=models.CASCADE)
     cambio_selezionato = models.ForeignKey(Valuta)
 
-    def __unicode__(self):
+    def __str__(self):
         None
 
     def calcola_totale_wallet(self):
@@ -70,6 +69,10 @@ class Wallet(models.Model):
         None
 
     def avvia_transazione(self,utente_destinatario,valuta,importo):
+        None
+
+    @staticmethod
+    def crea_utente(username,password):
         None
 
 
