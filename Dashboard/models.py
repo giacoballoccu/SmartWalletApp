@@ -27,16 +27,13 @@ class Conto(models.Model):
     importo = models.DecimalField(default=0,decimal_places=15, max_digits=30)
     wallet_associato = models.ManyToManyField('Wallet')
 
-    class Meta:
-        unique_together = (("wallet_associato", "tipo_valuta"),)
+
 
     def __str__(self):
         return self.tipo_valuta.sigla
 
-    def __init__(self, tipo_valuta, importo, wallet_associato):
-        self.tipo_valuta = tipo_valuta
-        self.importo = importo
-        self.wallet_associato = wallet_associato
+    def create(tipo_valuta, importo, wallet_associato):
+       return Conto(tipo_valuta=tipo_valuta, importo=importo, wallet_associato=wallet_associato)
 
     def calcola_totale_conto(self,valuta):
         None
