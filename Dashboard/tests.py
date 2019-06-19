@@ -10,14 +10,12 @@ class ValutaModelTest(TestCase):
         self.bitcoin = Valuta.objects.create(sigla="BTC", cambio="8000.0", nome="Bitcoin")
         self.euro = Valuta.objects.create(sigla="EUR", cambio="1.2", nome="Euro")
 
-    def test_sigla_testo(self):
+    def test_sigla_field(self):
         # controlla che sia massimo 3 caratteri
         max_lenght = self.dollaro._meta.get_field("sigla").max_length
         self.assertEqual(max_lenght, 3)
         # controlla che abbia il giusto valore
         self.assertEqual('USD', self.dollaro.sigla)
-
-    def test_sigla_unica(self):
         self.assertEqual(self.bitcoin._meta.get_field("sigla").unique, True)
 
     def test_cambio(self):
@@ -45,11 +43,11 @@ class WalletModelTest(TestCase):
         self.mario = User.objects.create_user(username='mariorossi', password='marioRossi1')
         self.wallet_mario = Wallet.objects.create(user_id=self.mario, cambio_selezionato=self.dollaro)
 
-    def test_campo_id(self):
+    def test_field_wallet_id(self):
         self.assertEqual(self.wallet_mario._meta.get_field("wallet_id").max_length, 35)
         self.assertTrue(self.wallet_mario._meta.get_field("wallet_id").unique)
 
-    def test_campo_user_id(self):
+    def test_field_user_id(self):
         self.assertTrue(self.wallet_mario._meta.get_field("user_id").one_to_one)
         self.assertEqual(self.wallet_mario._meta.get_field("user_id").related_model, User)
 
@@ -58,9 +56,6 @@ class WalletModelTest(TestCase):
         self.assertEqual(self.wallet_mario._meta.get_field("cambio_selezionato").related_model, Valuta)
 
     def test_creation(self):
-        # controlla la relazione con la valuta di default
-        self.assertTrue(self.wallet_mario._meta.get_field("cambio_selezionato").many_to_one)
-        self.assertEqual(self.wallet_mario._meta.get_field("cambio_selezionato").related_model, Valuta)
         # controlla la valuta selezionata di default
         self.assertEqual(self.wallet_mario.cambio_selezionato, Valuta.objects.get(sigla="USD"))
         # controlla la relazione con i conti aperti
@@ -131,7 +126,7 @@ class WalletModelTest(TestCase):
         Conto.objects.create(tipo_valuta=self.bitcoin, importo=0.0, wallet_associato=self.wallet_mario)
         self.assertEqual(self.wallet_mario.conti.all().count(), 1)
         # controllo che ci sia un eccezione
-        self.assertRaises(Exception, self.wallet_mario.rimuovi_conto(self.dollaro))
+        self.assertRaises(Exception, lambda: self.wallet_mario.rimuovi_conto(self.dollaro))
         self.assertEqual(self.wallet_mario.conti.all().count(), 1)
         
     def test_utente_eliminato_comporta_wallet_eliminato(self):
@@ -144,6 +139,50 @@ class WalletModelTest(TestCase):
 
 
 class ContoModelTest(TestCase):
-    @classmethod
-    def SetUpTestData(cls):
-        None
+    def setUp(self):
+        self.dollaro = Valuta.objects.create(sigla="USD", cambio="1.0", nome="Dollaro")
+        self.bitcoin = Valuta.objects.create(sigla="BTC", cambio="8000.0", nome="BitCoin")
+        self.euro = Valuta.objects.create(sigla="EUR", cambio="1.2", nome="Euro")
+        self.mario = User.objects.create_user(username='mariorossi', password='marioRossi1')
+        self.wallet_mario = Wallet.objects.create(user_id=self.mario, cambio_selezionato=self.dollaro)
+        self.conto= Conto.objects.create(tipo_valuta=self.bitcoin, importo=1.0, wallet_associato=self.wallet_mario)
+
+    def test_field_tipo_valuta(self):
+        self.assertTrue(self.conto._meta.get_field('tipo_valuta').many_to_one)
+        self.assertEqual(self.conto._meta.get_field('tipo_valuta').related_model, Valuta)
+
+    def test_field_wallet_associato(self):
+        self.assertTrue(self.conto._meta.get_field('wallet_associato').many_to_one)
+        self.assertEqual(self.conto._meta.get_field('wallet_associato').related_model, Wallet)
+
+    def test_field_importo(self):
+        self.assertTrue(self.conto._meta.get_field('importo').max_digits, 30)
+
+    def test_creazione(self):
+        self.assertEqual(self.conto.wallet_associato, self.wallet_mario)
+        self.assertEqual(self.conto.tipo_valuta, self.bitcoin)
+        self.assertEqual(self.conto.importo, 1)
+
+    def test_creazione_con_funzione(self):
+        conto = Conto.crea_conto(self.euro, 100.0, self.wallet_mario)
+        self.assertEqual(conto.tipo_valuta, self.euro)
+        self.assertEqual(conto.wallet_associato, self.wallet_mario)
+        self.assertEqual(conto.importo, 100.0)
+
+    def test_creazione_conto_di_tipo_esistente(self):
+        self.assertRaises(Exception, lambda: Conto.crea_conto(self.bitcoin, 1.0, self.wallet_mario))
+
+    def test_calcolo_totale_conto(self):
+        self.assertEqual(self.conto.calcola_totale_conto(self.conto.tipo_valuta), 1.0)
+        self.assertEqual(self.conto.calcola_totale_conto(self.dollaro), 8000.0)
+
+    def test_aggiunta_importo(self):
+        self.conto.aggiungi_importo(1.0)
+        self.assertEqual(self.conto.importo, 2.0)
+
+    def test_rimozione_importo(self):
+        self.conto.rimuovi_importo(0.3)
+        self.assertEqual(self.conto.importo, 0.7)
+
+    def test_rimozione_importo_da_conto_senza_copertura(self):
+        self.assertRaises(Exception, lambda: self.conto.rimuovi_importo(2.0))

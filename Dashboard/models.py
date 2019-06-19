@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-
 class Valuta(models.Model):
     sigla = models.CharField(max_length=3,  null=False, unique=True)
     cambio = models.DecimalField(decimal_places=15, max_digits=30)
@@ -28,7 +27,6 @@ class Wallet(models.Model):
     def __str__(self):
         return self.wallet_id
 
-    #USD
     def calcola_totale_wallet(self):
         totale = 0
         for conto in self.conti.all():
@@ -53,11 +51,16 @@ class Wallet(models.Model):
     def get_transazioni_ingresso(self):
         return self.transazione_ingresso.all()
 
-    def delete_account(self):
+    @staticmethod
+    def add_account():  # crea e associa un wallet a un utente
+        None
+
+    def delete_account(self):  # cancella il wallet al momento della cancellazione di un utente
         utente = User.objects.get(id=self.user_id.pk)
         # altre validazioni sull'utente...
         utente.delete()
         self.delete()
+
 
 class Conto(models.Model):
     tipo_valuta = models.ForeignKey(Valuta, on_delete=models.CASCADE, default=None)
@@ -88,21 +91,17 @@ class Conto(models.Model):
 
     @staticmethod
     def crea_conto(tipo_valuta, importo, wallet):  # metodo statico per la generazione di un nuovo conto
-       return Conto.objects.create(tipo_valuta=tipo_valuta, importo=importo,wallet_associato=wallet)
+        return Conto.objects.create(tipo_valuta=tipo_valuta, importo=importo,wallet_associato=wallet)
+
 
 class Transazione(models.Model):
     id_transazione = models.CharField(max_length=32, null=False, unique=True)
     data = models.DateTimeField(auto_now=True)
-    input_wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, null=False, related_name='input_wallet_id')
-    output_wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, null=False, related_name='output_wallet_id')
+    input_wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='input_wallet_id')
+    output_wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='output_wallet_id')
     cryptocurrency = models.ForeignKey(Valuta, on_delete=models.CASCADE)
     quantita = models.DecimalField(decimal_places=15, max_digits=30)
 
 
     def __str__(self):
         return self.id_transazione
-
-
-    @staticmethod
-    def crea_utente(username,password):
-        None
