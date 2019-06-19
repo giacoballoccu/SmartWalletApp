@@ -8,19 +8,17 @@
 
       <div class="collapse navbar-collapse justify-content-start" id="navbar">
           <ul class="navbar-nav"><li class="nav-item active">
-                <a class="nav-link" href="#">Aggiungi Cryptovaluta <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{% url 'aggiungi_conto' %}">Aggiungi Cryptovaluta <span class="sr-only">(current)</span></a>
+            </li>
+
+
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'transazioni' %}">Transazioni </a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">Rimuovi Cryptovaluta </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">Transazioni </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">Tassi di Cambio </a>
+                <a class="nav-link" href="{% url 'converti_valute' %}">Tassi di Cambio </a>
             </li>
 
         </ul>
