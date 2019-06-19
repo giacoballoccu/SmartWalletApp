@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block stylesheets %}
+        {% include 'partials/stylesheets.html' %}
+    {% endblock %}
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    {% block navbar %}
+        {% include 'partials/navbar.html' %}
+    {% endblock navbar %}
+    {% block content %}
+
+    {% endblock %}
+</body>
+{%block javascripts%}
+        {%include 'partials/javascript.html'%}
+{%endblock%}
+</html>
