@@ -46,7 +46,7 @@ class WalletModelTest(TestCase):
         self.wallet_mario = Wallet.objects.create(user_id=self.mario, cambio_selezionato=self.dollaro)
 
     def test_campo_id(self):
-        self.assertEqual(self.wallet_mario._meta.get_field("wallet_id").max_lenght, 35)
+        self.assertEqual(self.wallet_mario._meta.get_field("wallet_id").max_length, 35)
         self.assertTrue(self.wallet_mario._meta.get_field("wallet_id").unique)
 
     def test_campo_user_id(self):
@@ -87,8 +87,8 @@ class WalletModelTest(TestCase):
         None
 
     def test_get_conti(self):
-        self.self.wallet_mario.aggiungi_conto(self.bitcoin, 1.0)
-        self.assertEqual(self.wallet_mario.conti.importo, 1.0)
+        self.wallet_mario.aggiungi_conto(self.bitcoin, 1.0)
+        self.assertEqual(self.wallet_mario.conti.get(tipo_valuta=self.bitcoin).importo, 1.0)
         
     def test_modifica_cambio_selezionato(self):
         self.assertEqual(self.wallet_mario.cambio_selezionato, self.dollaro)
@@ -101,8 +101,8 @@ class WalletModelTest(TestCase):
         self.assertEqual(self.wallet_mario.cambio_selezionato, self.bitcoin)
 
     def test_calcolo_totale_wallet(self):
-        conto = Conto.objects.create(tipo_valuta=self.bitcoin, importo=1.0, wallet_associato=self.wallet_mario)
-        conto = Conto.objects.create(tipo_valuta=self.dollaro, importo=8000.0, wallet_associato=self.wallet_mario)
+        Conto.objects.create(tipo_valuta=self.bitcoin, importo=1.0, wallet_associato=self.wallet_mario)
+        Conto.objects.create(tipo_valuta=self.dollaro, importo=8000.0, wallet_associato=self.wallet_mario)
         self.assertEqual(self.wallet_mario.conti.all().count(), 2)
         # controllo cambio con il dollaro
         self.wallet_mario.cambio_selezionato=self.dollaro
@@ -112,28 +112,32 @@ class WalletModelTest(TestCase):
         self.assertEqual(self.wallet_mario.calcola_totale_wallet(), 2.0)
 
     def test_rimuovi_conto(self):
-        conto = Conto.objects.create(tipo_valuta=self.bitcoin, importo=1.0, wallet_associato=self.wallet_mario)
+        Conto.objects.create(tipo_valuta=self.bitcoin, importo=1.0, wallet_associato=self.wallet_mario)
         conto = Conto.objects.create(tipo_valuta=self.dollaro, importo=1.0, wallet_associato=self.wallet_mario)
         self.assertEqual(self.wallet_mario.conti.all().count(), 2)
         # controllo effettiva rimozione conto
-        # self.wallet_mario.rimuovi_conto(Valuta.objects.get(sigla="BTC"))
         conto.delete()
         self.assertEqual(self.wallet_mario.conti.all().count(), 1)
         # controllo errore se il conto di quella valuta non esiste
         self.assertEqual(0, self.wallet_mario.conti.filter(tipo_valuta=self.dollaro).count())
         
     def test_rimuovi_conto_con_funzione(self):
-        conto = Conto.objects.create(tipo_valuta=self.bitcoin, importo=1.0, wallet_associato=self.wallet_mario)
+        Conto.objects.create(tipo_valuta=self.bitcoin, importo=1.0, wallet_associato=self.wallet_mario)
         self.assertEqual(self.wallet_mario.conti.all().count(), 1)
         self.wallet_mario.rimuovi_conto(self.bitcoin)
         self.assertEqual(self.wallet_mario.conti.all().count(), 0)
-        None
 
     def test_rimuovi_conto_che_non_esiste(self):
-        None
+        Conto.objects.create(tipo_valuta=self.bitcoin, importo=0.0, wallet_associato=self.wallet_mario)
+        self.assertEqual(self.wallet_mario.conti.all().count(), 1)
+        # controllo che ci sia un eccezione
+        self.assertRaises(Exception, self.wallet_mario.rimuovi_conto(self.dollaro))
+        self.assertEqual(self.wallet_mario.conti.all().count(), 1)
         
     def test_utente_eliminato_comporta_wallet_eliminato(self):
-        None
+        self.wallet_mario.delete_account()
+        self.assertEqual(self.wallet_mario.wallet_id, '')
+        self.assertEqual(Wallet.objects.all().count(), 0)
 
     def test_get_lista_transazioni(self):
         None

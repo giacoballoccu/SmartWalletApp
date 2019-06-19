@@ -21,15 +21,12 @@ class Valuta(models.Model):
 
 class Wallet(models.Model):
     wallet_id = models.CharField(max_length=35, null=False, unique=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
     cambio_selezionato = models.ForeignKey(Valuta, on_delete=models.CASCADE)
     transazione_ingresso = models.ManyToManyField('Wallet', null=True, through='Transazione', related_name="transazione_uscita",symmetrical=False)
 
     def __str__(self):
         return self.wallet_id
-
-    def get_conti(self):
-        self.conti.all()
 
     #USD
     def calcola_totale_wallet(self):
@@ -56,6 +53,11 @@ class Wallet(models.Model):
     def get_transazioni_ingresso(self):
         return self.transazione_ingresso.all()
 
+    def delete_account(self):
+        utente = User.objects.get(id=self.user_id.pk)
+        # altre validazioni sull'utente...
+        utente.delete()
+        self.delete()
 
 class Conto(models.Model):
     tipo_valuta = models.ForeignKey(Valuta, on_delete=models.CASCADE, default=None)
