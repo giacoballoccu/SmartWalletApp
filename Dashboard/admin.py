@@ -1,22 +1,13 @@
 from django.contrib import admin
-from .models import Wallet
-from .models import Conto
-from .models import Valuta
-from .models import Transazione
+from .models import Wallet, Conto, Valuta, Transazione
+from .forms import WalletAdminForm
 
-
-#Not working
-
-class ContoInLine(admin.TabularInline):
-    model = Conto
 
 class WalletAdmin(admin.ModelAdmin):
-    inlines = [
-        ContoInLine,
-    ]
-# Register your models here.
+    form = WalletAdminForm
 
-admin.site.register(Wallet)
+
+admin.site.register(Wallet, WalletAdmin)
 admin.site.register(Conto)
 admin.site.register(Valuta)
 admin.site.register(Transazione)
