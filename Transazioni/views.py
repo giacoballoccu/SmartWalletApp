@@ -1,23 +1,17 @@
-# Create your views here.
-from django.db import models
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 
-# Create your models here.
-class Transazione(models.Model):
-    id = None
-    data = None
-    wallet_mandante = None
-    wallet_destinatario = None
-    valuta = None
-    importo = None
-    causale = None
+@login_required
+def index(request):
+    return render(request, 'transazioni.html')
 
-    def __unicode__(self):
-        None
 
-    def get_id(self):
-        None
+@login_required
+def dettaglio_transazione(request):
+    return
 
-    @staticmethod
-    def crea_transazione(mandante, destinatario, valuta, importo, causale):
-        None
+
+@login_required
+def crea_transazione(request):
+    return
