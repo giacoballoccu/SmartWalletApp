@@ -16,7 +16,7 @@ class Valuta(models.Model):
         return self.sigla
 
     def converti_cambio(self, valuta):
-        return (float)(self.cambio/valuta.cambio)
+        return float(self.cambio)/float(valuta.cambio)
 
 
 class Wallet(models.Model):
