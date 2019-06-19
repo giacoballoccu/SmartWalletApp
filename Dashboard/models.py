@@ -102,6 +102,12 @@ class Transazione(models.Model):
     cryptocurrency = models.ForeignKey(Valuta, on_delete=models.CASCADE)
     quantita = models.DecimalField(decimal_places=15, max_digits=30)
 
+    @staticmethod
+    def crea_transazione(wallet_input,wallet_output,tipo_valuta,importo):
+        None
+
+    def get_url(self):  #restituisce l'url dell'istanza della transazione
+        None
 
     def __str__(self):
         return self.id_transazione

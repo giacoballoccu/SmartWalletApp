@@ -79,7 +79,8 @@ class WalletModelTest(TestCase):
         self.assertEqual(self.wallet_mario.conti.get(tipo_valuta=self.bitcoin).importo, 1.0)
 
     def test_aggiunta_conto_di_valuta_uguale_a_esistente(self):
-        None
+        self.wallet_mario.aggiungi_conto(self.bitcoin, 1.0)
+        self.assertRaises(Exception, lambda: self.wallet_mario.aggiungi_conto(self.bitcoin, 1.0))
 
     def test_get_conti(self):
         self.wallet_mario.aggiungi_conto(self.bitcoin, 1.0)
@@ -145,7 +146,7 @@ class ContoModelTest(TestCase):
         self.euro = Valuta.objects.create(sigla="EUR", cambio="1.2", nome="Euro")
         self.mario = User.objects.create_user(username='mariorossi', password='marioRossi1')
         self.wallet_mario = Wallet.objects.create(user_id=self.mario, cambio_selezionato=self.dollaro)
-        self.conto= Conto.objects.create(tipo_valuta=self.bitcoin, importo=1.0, wallet_associato=self.wallet_mario)
+        self.conto = Conto.objects.create(tipo_valuta=self.bitcoin, importo=1.0, wallet_associato=self.wallet_mario)
 
     def test_field_tipo_valuta(self):
         self.assertTrue(self.conto._meta.get_field('tipo_valuta').many_to_one)
