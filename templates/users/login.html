@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    DashBoard - Smartwallet
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+
+
+    <div class="row">
+        <div class="col-lg-4">
+</div>
+<div class="col-lg-4">
+
+        <form method="POST" novalidate>
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend style="padding-top: 20px">Accedi</legend>
+                {{ form| crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Accedi</button>
+            </div>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Non hai un account? <a class="ml-2" href="{% url 'registrazione' %}">Registrati</a>
+            </small>
+        </div>
+
+</div>
+    </div>
+
+{% endblock %}

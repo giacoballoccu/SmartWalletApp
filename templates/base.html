@@ -8,9 +8,23 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
+{% include 'partials/header.html' %}
     {% block navbar %}
         {% include 'partials/navbar.html' %}
     {% endblock navbar %}
+            <div class="row">
+        <div class="col-md-8">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+        </div>
+        </div>
+
     {% block content %}
 
     {% endblock %}

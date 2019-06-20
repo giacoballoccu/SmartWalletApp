@@ -89,13 +89,21 @@
 .container .info span .fa {
   color: #EF3B3A;
 }
+form{
+  color: #FFFFFF;!important;
+}
+.text-muted {
+  color: #FFFFFF!important;
+}
+
+.btn-outline-info {
+    color: #ffffff;
+    background: #ffa400;
+}
 
 body {
-  background: #76b852; /* fallback for old browsers */
-  background: -webkit-linear-gradient(right, #76b852, #8DC26F);
-  background: -moz-linear-gradient(right, #76b852, #8DC26F);
-  background: -o-linear-gradient(right, #76b852, #8DC26F);
-  background: linear-gradient(to left, #76b852, #8DC26F);
+  background: #6c7a89; /* fallback for old browsers */
+
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;      

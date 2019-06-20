@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% block title %}
+
+{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-4">
+</div>
+<div class="col-lg-4">
+
+        <form method="POST" novalidate>
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend style="padding-top: 20px">Registrati</legend>
+                {{ form| crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Registrati</button>
+            </div>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Hai già un account? <a class="ml-2" href="{% url 'login' %}">Accedi</a>
+            </small>
+        </div>
+
+</div>
+    </div>
+
+{% endblock %}
