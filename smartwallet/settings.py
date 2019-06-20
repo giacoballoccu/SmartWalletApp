@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'Dashboard.apps.DashboardConfig',
     'Transazioni.apps.TransazioniConfig',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'smartwallet.urls'
@@ -101,7 +103,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'it-it'
 
 TIME_ZONE = 'UTC'
 
@@ -122,3 +124,6 @@ STATICFILES_DIRS = [
     '/Dashboard/static/',
 
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+LOGIN_REDIRECT_URL = 'dashboard'
