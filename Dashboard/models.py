@@ -52,6 +52,10 @@ class Wallet(models.Model):
         return self.transazione_ingresso.all()
 
     @staticmethod
+    def crea_wallet(wallet_id, user_id, cambio_selezionato):  # metodo statico per la generazione di un nuovo conto
+        return Wallet.objects.create(wallet_id=wallet_id, user_id=user_id, cambio_selezionato=cambio_selezionato)
+
+    @staticmethod
     def add_account():  # crea e associa un wallet a un utente
         None
 
