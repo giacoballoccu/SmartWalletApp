@@ -21,11 +21,11 @@
               </thead>
 
               <tbody>
-
-                <tr>
+        {% for conto in conti %}
+                            <tr>
                   <th scope="row"></th>
-                  <td>Bitcoin</td>
-                  <td>10</td>
+                  <td>{{ conto.tipo_valuta.nome }}</td>
+                  <td>{{ conto.importo }}</td>
                     <td>
                         <a {# href="{ url 'modifica_importo_conto'  value = 0%}" #}><i class="fas fa-pencil-alt" style="padding-left: 20px;"></i></a>
                   </td>
@@ -35,20 +35,7 @@
                       </a>
                   </td>
                 </tr>
-
-              <tr>
-                  <th scope="row"></th>
-                  <td>Ethereum</td>
-                  <td>43</td>
-                  <td>
-                           <a {# href="{ url 'modifica_importo_conto'  value = 0%}" #}><i class="fas fa-pencil-alt" style="padding-left: 20px;"></i></a>
-                  </td>
-                  <td>
-                      <a href="" onclick="return confirm('Puoi eliminare solo se hai 0 di una valua')">
-                                    <i class="fas fa-times" style="color: #ff0000;padding-left: 20px;"></i>
-                      </a>
-                  </td>
-                </tr>
+        {% endfor %}
 
               </tbody>
 
@@ -56,7 +43,7 @@
             </table>
 
             <h3>Totale: </h3>
-            <h3> 20000$</h3>
+            <h3>{{ totale }}</h3>
         </div>
 </div>
 {% endblock %}
