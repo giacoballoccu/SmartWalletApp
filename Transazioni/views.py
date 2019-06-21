@@ -1,10 +1,14 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-
+from Dashboard.models import *
 
 @login_required
 def index(request):
-    return render(request, 'transazioni.html')
+    user_wallet = Wallet.objects.get(user_id=request.user)
+    transazioni_inviate = Transazione.objects.filter(input_wallet=user_wallet)
+    transazioni_ricevute = Transazione.objects.filter(input_wallet=user_wallet)
+    return render(request, 'transazioni.html', {'transazioni_inviate': transazioni_inviate,
+                                                'transazioni_ricevute': transazioni_ricevute, })
 
 
 @login_required
