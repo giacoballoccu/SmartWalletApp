@@ -12,7 +12,13 @@ from django.utils.crypto import get_random_string
 
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    user_wallet = Wallet.objects.get(user_id=request.user)
+    conti = Conto.objects.filter(wallet_associato=user_wallet)
+    totale = conti[0].calcola_totale_conto(user_wallet.cambio_selezionato)
+    return render(request, 'dashboard.html', {
+        'conti': conti,
+        'totale': totale,
+    })
 
 
 @login_required
@@ -50,7 +56,7 @@ def registrazione(request):
             username = form.cleaned_data.get('username')
             newWallet = Wallet.crea_wallet(get_random_string(length=32), User.objects.get(username=username), Valuta.objects.get(sigla='USD'))
             newWallet.save()
-            messages.success(request, f'Account creato con successo! Benvenuto {username}!')
+            messages.success(request, 'Account creato con successo! Benvenuto {username}!')
             return redirect(dashboard)
     else:
         form = UserRegisterForm()

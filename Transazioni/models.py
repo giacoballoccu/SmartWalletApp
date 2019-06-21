@@ -1,23 +1,20 @@
 from django.db import models
 
-'''
-# Create your models here.
-class Transazione(models.Model):
-    id = None
-    data = None
-    wallet_mandante = None
-    wallet_destinatario = None
-    valuta = None
-    importo = None
-    causale = None
 
-    def __unicode__(self):
-        None
+#class Transazione(models.Model):
+#    id_transazione = models.CharField(max_length=32, null=False, unique=True)
+#    data = models.DateTimeField(auto_now=True)
+#    input_wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='input_wallet_id')
+#    output_wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='output_wallet_id')
+#    cryptocurrency = models.ForeignKey(Valuta, on_delete=models.CASCADE)
+#    quantita = models.DecimalField(decimal_places=15, max_digits=30)
 
-    def get_id(self):
-        None
+#    @staticmethod
+ #   def crea_transazione(wallet_input,wallet_output,tipo_valuta,importo):
+#        None
 
-    @staticmethod
-    def crea_transazione(mandante, destinatario, valuta, importo, causale):
-        None
-'''
+ #   def get_url(self):  #restituisce l'url dell'istanza della transazione
+    #    None
+
+  #  def str(self):
+   #     return self.id_transazione

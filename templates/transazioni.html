@@ -5,121 +5,129 @@
 {% endblock %}
 {# provvisorio da cambiare #}
 {% block navbar %}<!-- NAVIGATION BAR-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-      <!-- Toggle button-->
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+        <!-- Toggle button-->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-      <div class="collapse navbar-collapse justify-content-start" id="navbar">
-          <ul class="navbar-nav"><li class="nav-item active">
-                <a class="nav-link" href="{% url 'dashboard' %}">Dashboard <span class="sr-only">(current)</span></a>
-            </li>
-
-
-
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'transazioni' %}">Transazioni </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'converti_valute' %}">Tassi di Cambio </a>
-            </li>
-
-        </ul>
-      </div>
+        <div class="collapse navbar-collapse justify-content-start" id="navbar">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'dashboard' %}">Dashboard <span
+                            class="sr-only">(current)</span></a>
+                </li>
 
 
-      <!-- Log out button-->
-      <div class="collapse navbar-collapse  justify-content-end" id="navbar">
-          <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'transazioni' %}">Transazioni </a>
+                </li>
 
-              <!-- Divider for toggle mode-->
-              <div class="dropdown-divider"></div>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'converti_valute' %}">Tassi di Cambio </a>
+                </li>
+
+            </ul>
+        </div>
+
+
+        <!-- Log out button-->
+        <div class="collapse navbar-collapse justify-content-end" id="navbar">
+            <ul class="navbar-nav">
+
+                <!-- Divider for toggle mode-->
+                <div class="dropdown-divider"></div>
 
                 <li class="nav-item">
                     <a class="nav-link" href="#">Log out </a>
                 </li>
-          </ul>
-      </div>
+            </ul>
+        </div>
 
-</nav>{% endblock %}
+    </nav>{% endblock %}
 
 {% block content %}
-<!-- TABELLA TRANSAZIONI CON BOTTONE CREA-->
-        <div class="col py-5 px-md-5 bordered col-example">
-            <div class="shadow-lg p-3 mb-5 bg rounded">
-                <table class="table table-hover table-dark table-responsive-md">
-                    <thead>
-                        <tr>
-                          <th scope="col">ID Transazione</th>
-                          <th scope="col">Data</th>
-                          <th scope="col">Il tuo Wallet</th>
-                          <th scope="col">Wallet Destinatario</th>
-                          <th scope="col">Criptovaluta</th>
-                          <th scope="col">Totale</th>
-                          <th scope="col">Dettagli</th>
-                        </tr>
-                      </thead>
+    <!-- TABELLA TRANSAZIONI CON BOTTONE CREA-->
+    <div class="col py-5 px-md-5 bordered col-example">
+        <div class="shadow-lg p-3 mb-5 bg rounded">
+            <h1>In uscita</h1>
+            <table class="table table-hover table-dark table-responsive-md">
 
-                      <tbody>
+                <thead>
+                <tr>
+                    <th scope="col">ID Transazione</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Il tuo Wallet</th>
+                    <th scope="col">Inviata a</th>
+                    <th scope="col">Criptovaluta</th>
+                    <th scope="col">Totale</th>
+                    <th scope="col">Dettagli</th>
+                </tr>
+                </thead>
 
-                        <!-RIGA TRANSAZIONE-->
-                        <tr>
-                          <th scope="row">1</th>
-                          <td>12-12-12</td>
-                          <td>AZSFLJ3748</td>
-                          <td>AZSFLJ3748</td>
-                          <td>BTC</td>
-                          <td>10</td>
-                          <td>
-                              <a href="#" >
+                <tbody>
+
+                {% for transazione in transazioni_ricevute %}
+                    <tr>
+                        <th scope="row">{{ transazione.id }}</th>
+                        <td>{{ transazione.data }}</td>
+                        <td>{{ transazione.input_wallet }}</td>
+                        <td>{{ transazione.output_wallet }}</td>
+                        <td>{{ transazione.cryptocurrency }}</td>
+                        <td>{{ transazione.quantita }}</td>
+                        <td>
+                            <a href="#">
                                 <i class="fa fa-search" aria-hidden="true">
-                                  </i>
-                              </a>
-                          </td>
-                        </tr>
+                                </i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
 
-                        <!-RIGA TRANSAZIONE-->
-                        <tr>
-                          <th scope="row">2</th>
-                          <td>12-12-12</td>
-                          <td>AZSFLJ3748</td>
-                          <td>AZSFLJ3748</td>
-                          <td>BTC</td>
-                          <td>10</td>
-                          <td>
-                              <a href="#" >
-                                <i class="fa fa-search" aria-hidden="true">
-                                  </i>
-                              </a>
-                          </td>
-                        </tr>
-
-                        <!-RIGA TRANSAZIONE-->
-                        <tr>
-                          <th scope="row">3</th>
-                          <td>12-12-12</td>
-                          <td>AZSFLJ3748</td>
-                          <td>AZSFLJ3748</td>
-                          <td>BTC</td>
-                          <td>10</td>
-                          <td>
-                              <a href="#" >
-                                <i class="fa fa-search" aria-hidden="true">
-                                  </i>
-                              </a>
-                          </td>
-                        </tr>
-
-                      </tbody>
-                </table>
-
-
+                </tbody>
+            </table>
             <!-- BOTTONE CREA TRANSAZIONE-->
             <a href="#" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Crea Transazione</a>
 
-            </div>
         </div>
+    </div>
+    </div>
+    <div class="col py-5 px-md-5 bordered col-example">
+        <div class="shadow-lg p-3 mb-5 bg rounded">
+            <table class="table table-hover table-dark table-responsive-md">
+                <h1>In entrata</h1>
+                <thead>
+                <tr>
+                    <th scope="col">ID Transazione</th>
+                    <th scope="col">Data</th>
+                    <th scope="col">Il tuo Wallet</th>
+                    <th scope="col">Ricevuta da</th>
+                    <th scope="col">Criptovaluta</th>
+                    <th scope="col">Totale</th>
+                    <th scope="col">Dettagli</th>
+                </tr>
+                </thead>
+                {% for transazione in transazioni_ricevute %}
+                    <tr>
+                        <th scope="row">{{ transazione.id }}</th>
+                        <td>{{ transazione.data }}</td>
+                        <td>{{ transazione.input_wallet }}</td>
+                        <td>{{ transazione.output_wallet }}</td>
+                        <td>{{ transazione.cryptocurrency }}</td>
+                        <td>{{ transazione.quantita }}</td>
+                        <td>
+                            <a href="#">
+                                <i class="fa fa-search" aria-hidden="true">
+                                </i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    </div>
 {% endblock %}
