@@ -8,3 +8,52 @@
 
         <!-- Custom JS -->
         <script src="{% static 'smartwallet/js/smartwallet.js' %}"></script>
+
+        <script src="{% static 'smartwallet/js/converter.js' %}"></script>
+<script>
+      $("button").click(function (e) {
+       e.preventDefault();
+
+      var amountInput = document.getElementById('amount');
+  var toShowAmount = document.querySelector('.given-amount');
+  var toShowBase = document.querySelector('.base-currency');
+  var toShowSecond = document.querySelector('.second-currency');
+  var toShowResult = document.querySelector('.final-result');
+    var amount = amountInput.value;
+    var result = 0;
+    var currency1 = $("#currency-1").val();
+    var currency2 = $("#currency-2").val();
+    $.ajax({
+      url: '{% url "get_rates" %}',
+      type: 'GET',
+
+      data: {
+        'currency-1': currency1,
+        'currency-2': currency2,
+      },
+         dataType: 'json',
+      success: function (data) {
+            try{
+                if (data.coin1 == data.coin2){
+                    result = amount;
+                } else {
+                    result = amount * data.rates;
+
+                }
+                }
+                catch(err) {
+                    result = amount * (1 / data.rates);
+                }
+            toShowAmount.innerHTML = amount;
+            toShowBase.textContent = data.coin1 + ' = ';
+            toShowSecond.textContent = data.coin2;
+            toShowResult.textContent = result;
+      },
+      error: function (data) {
+
+        }
+    });
+
+    });
+
+</script>

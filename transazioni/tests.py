@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from Dashboard.models import Valuta, Conto, Wallet, Transazione
+from dashboard.models import Valuta, Conto, Wallet, Transazione
 class TransazioniModelTest(TestCase):
     def setUp(self):
         self.dollaro = Valuta.objects.create(sigla="USD", cambio="1.0", nome="Dollaro")

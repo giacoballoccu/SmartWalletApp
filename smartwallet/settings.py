@@ -29,8 +29,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'Dashboard.apps.DashboardConfig',
-    'Transazioni.apps.TransazioniConfig',
+    'dashboard.apps.DashboardConfig',
+    'transazioni.apps.TransazioniConfig',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -121,7 +121,7 @@ LOGIN_URL = '/login'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    '/Dashboard/static/',
+    '/dashboard/static/',
 
 ]
 

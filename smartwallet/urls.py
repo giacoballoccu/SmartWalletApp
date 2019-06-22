@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
-from Dashboard import views as views
+from dashboard import views as views
 
 
 urlpatterns = [
@@ -24,6 +24,7 @@ urlpatterns = [
     path('registrazione/', views.registrazione, name='registrazione'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/', auth_views.LoginView.as_view(template_name='users/logout.html'), name='logout'),
-    path('dashboard/', include('Dashboard.urls')),
-    path('transazioni/', include('Transazioni.urls'))
+    path('dashboard/', include('dashboard.urls')),
+    path('transazioni/', include('transazioni.urls')),
+    path('tassi-di-cambio', include('tassi_di_cambio.urls'))
 ]
