@@ -1,15 +1,36 @@
 
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
+img {
+
+
+}
+
+.registrati{
+  font-weight: bold;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.label-registrati{ font-weight: bold;
+}
+
+header
+{
+  background: rgb(49,72,136) ;
+  margin-bottom: 30px;
+}
+
 .login-page {
   width: 360px;
   padding: 8% 0 0;
   margin: auto;
 }
+
 .form {
   position: relative;
   z-index: 1;
-  background: darkgrey;
+  background: rgb(49,72,136);
   max-width: 360px;
   margin: 0 auto 100px;
   padding: 45px;
@@ -102,9 +123,14 @@ form{
 }
 
 body {
-  background: #6c7a89; /* fallback for old browsers */
+  background: white; /* fallback for old browsers */
 
   font-family: "Roboto", sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;      
+  -moz-osx-font-smoothing: grayscale;
+  color: black;
+}
+
+*{
+  font-size: 14px;
 }
