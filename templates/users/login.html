@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    DashBoard - Smartwallet
+    Login - Smartwallet
 {% endblock %}
 
 {% block navbar %}{% endblock %}
@@ -19,7 +19,7 @@
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend style="padding-top: 20px">Accedi</legend>
-                {{ form| crispy }}
+                {{ form | crispy }}
             </fieldset>
             <div class="form-group">
                 <button class="btn btn-outline-info" type="submit">Accedi</button>

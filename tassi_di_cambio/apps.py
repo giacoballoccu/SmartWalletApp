@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class TransazioniConfig(AppConfig):
+class tassi_di_cambioConfig(AppConfig):
     name = 'tassi_di_cambio'
