@@ -9,13 +9,13 @@
 
 {% block content %}
 
+        <div class="login-page form">
+            <h4 class="text-center text-light">Log out successful!</h4>
 
-
-        <h2>You have been logged out</h2>
-    <div class="border-top pt-3">
-        <small class="text-muted">
-            <a href="{% url 'login' %}">Log In Again</a>
-        </small>
-    </div>
+            <div class="border-top pt-5">
+                <button>
+                    <a class="text-light " href="{% url 'login' %}">Log In</a>
+                </button>
+        </div>
 
 {% endblock %}
