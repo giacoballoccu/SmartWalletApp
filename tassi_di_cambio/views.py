@@ -3,15 +3,12 @@ from django.contrib.auth.decorators import login_required
 from pip._vendor import requests
 from django.http import JsonResponse
 
+from dashboard.models import Valuta
+
+
 @login_required
 def convertitore(request):
-    api = extract_api()
-    coins_array = []
-    coins_json = sorted(api[:75], key=lambda k: k['data_trade_count'], reverse=True)
-
-    for crypto in coins_json:
-        coins_array.append(crypto['asset_id'])
-
+    coins_array = list(Valuta.objects.values_list('sigla', flat=True))
     return render(request, 'convertivalute.html', {'lista': coins_array})
 
 

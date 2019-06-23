@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 from django.contrib.auth.models import User
@@ -17,12 +19,16 @@ class Valuta(models.Model):
     def converti_cambio(self, valuta):
         return float(self.cambio)/float(valuta.cambio)
 
+    @staticmethod
+    def crea_valuta(sigla, cambio, nome):
+        return Valuta.objects.create(sigla=sigla, cambio=cambio, nome=nome)
 
 class Wallet(models.Model):
     wallet_id = models.CharField(max_length=35, null=False, unique=True)
     user_id = models.OneToOneField(User, on_delete=models.CASCADE)
     cambio_selezionato = models.ForeignKey(Valuta, on_delete=models.CASCADE)
     transazione_ingresso = models.ManyToManyField('Wallet', null=True, through='Transazione', related_name="transazione_uscita",symmetrical=False)
+    ultimo_aggiornamento = models.DateTimeField(default=datetime(1998, 1, 30, 12, 00))
 
     def __str__(self):
         return self.wallet_id
