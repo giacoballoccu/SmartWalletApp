@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db import models
 
 from django.contrib.auth.models import User
+from django.utils.crypto import get_random_string
 
 
 class Valuta(models.Model):
@@ -100,8 +101,8 @@ class Conto(models.Model):
         None
 
     @staticmethod
-    def crea_conto(tipo_valuta, importo, wallet):  # metodo statico per la generazione di un nuovo conto
-        return Conto.objects.create(tipo_valuta=tipo_valuta, importo=importo,wallet_associato=wallet)
+    def crea_conto(tipo_valuta, wallet):  # metodo statico per la generazione di un nuovo conto
+        return Conto.objects.create(tipo_valuta=tipo_valuta, wallet_associato=wallet)
 
 
 class Transazione(models.Model):
@@ -114,7 +115,7 @@ class Transazione(models.Model):
 
     @staticmethod
     def crea_transazione(wallet_input,wallet_output,tipo_valuta,importo):
-        None
+        return Transazione.objects.create(get_random_string(length=32),wallet_input=wallet_input, wallet_output=wallet_output, tipo_valuta=tipo_valuta, importo=importo)
 
     def get_url(self):  #restituisce l'url dell'istanza della transazione
         None

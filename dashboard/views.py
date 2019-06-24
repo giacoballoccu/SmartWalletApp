@@ -92,7 +92,7 @@ def registrazione(request):
             return redirect(dashboard)
     else:
         form = UserRegisterForm()
-    return render(request, 'users/registrazione.html', {'form': form})
+    return render(request, 'users/registrazione.html', {'form': form, 'title': "Registrati - Smartwallet"})
 
 
 

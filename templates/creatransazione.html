@@ -2,10 +2,9 @@
 
 {% load crispy_forms_tags %}
 {% block title %}
-    {{ title }}
+    Invia Denaro - SmartWallet
 {% endblock %}
 
-{% block navbar %}{% endblock %}
 
 {% block content %}
 
@@ -14,20 +13,15 @@
         <form method="POST" novalidate>
             {% csrf_token %}
             <fieldset class="form-group label-registrati">
-                <h2 class="registrati">Registrati</h2>
+                <h2 class="registrati">Invia Denaro</h2>
                 {{ form| crispy }}
             </fieldset>
 
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit" >Registrati</button>
+                <button class="btn btn-outline-info" type="submit" >Invia</button>
             </div>
         </form>
 
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                Hai già un account? <a class="ml-2" href="{% url 'login' %}">Accedi</a>
-            </small>
-        </div>
 
 </div>
     </div>
