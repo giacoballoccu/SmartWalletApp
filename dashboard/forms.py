@@ -8,21 +8,21 @@ from django.utils.translation import gettext as _
 
 
 class WalletAdminForm(forms.ModelForm):
-    conti = forms.ModelMultipleChoiceField(
-        queryset=Conto.objects.all(),
-        widget=FilteredSelectMultiple(verbose_name='conti', is_stacked=False,))
+   # conti = forms.ModelMultipleChoiceField(
+   #     queryset=Conto.objects.all(),
+    #    widget=FilteredSelectMultiple(verbose_name='conti', is_stacked=False,))
 
     class Meta:
         model = Wallet
-        fields = ['wallet_id', 'user_id', 'cambio_selezionato']
+        fields = ['wallet_id', 'user_id', 'cambio_selezionato', 'ultimo_aggiornamento']
 
     def __init__(self, *args, **kwargs):
         super(WalletAdminForm, self).__init__(*args, **kwargs)
-        if self.instance:
-            # fill initial related values
-            self.fields['conti'].initial = self.instance.conti.all()
-            # prevent editing conti
-            self.fields['conti'].disabled = True
+        #if self.instance:
+        #    # fill initial related values
+        #    self.fields['conti'].initial = self.instance.conti.all()
+        #    # prevent editing conti
+        #    self.fields['conti'].disabled = True
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
