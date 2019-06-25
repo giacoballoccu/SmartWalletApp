@@ -9,6 +9,16 @@
     <div class="collapse navbar-collapse justify-content-start" id="navbar">
         <ul class="navbar-nav">
             <ul class="navbar-nav">
+
+                {% if not "login" in request.path %}
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">
+                        <img alt="Brand" src="SmartWallet_noTitle.png" style="width: 50px; height: 50px;">
+                    </a>
+                </div>
+                {% endif %}
+
+
                 {% if "dashboard" in request.path %}
                     <li class="nav-item active">
                         <a class="nav-link" href="{% url 'dashboard' %}">Dashboard <span
