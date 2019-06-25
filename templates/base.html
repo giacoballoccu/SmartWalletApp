@@ -25,11 +25,11 @@
         </div>
         </div>
 
-    {% block content %}
-
-    {% endblock %}
+<main id="main_conteiner">{% block content %}{% endblock %}</main>
+{% block footer %}{% endblock %}
 </body>
 {%block javascripts%}
         {%include 'partials/javascript.html'%}
 {%endblock%}
+
 </html>

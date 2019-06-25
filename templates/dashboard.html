@@ -67,7 +67,7 @@
                   <td>{{ conto.tipo_valuta.nome }}</td>
                   <td>{{ conto.importo }}</td>
                     <td>
-                        <a {# href="{ url 'modifica_importo_conto'  value = 0%}" #}><i class="fas fa-pencil-alt" style="padding-left: 20px;"></i></a>
+                        <a {# href="{ url 'modifica_importo_conto'  value = 0%}" #}><i class="fas fa-pencil-alt"></i></a>
                   </td>
                   <td>
                       <a href="" onclick="return confirm('Sei sicuro di voler eliminare questo articolo?')">
@@ -86,4 +86,13 @@
             <h3>{{ totale }}</h3>
         </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+        {% include 'partials/footer.html' %}
+{% endblock %}
+
+{% block javascripts %}
+        {{ block.super }}
+        {% include 'partials/update_rates_script.html' %}
 {% endblock %}

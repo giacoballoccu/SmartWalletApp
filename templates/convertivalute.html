@@ -45,6 +45,8 @@
 
 {% endblock %}
 
+{% block footer %}{% include 'partials/footer.html' %}{% endblock %}
+
 {% block javascripts%}{{ block.super }}
 <script>
       $("button").click(function (e) {
@@ -91,5 +93,6 @@
     });
 
     });
-
-</script>{% endblock %}
+</script>
+    {% include 'partials/update_rates_script.html' %}
+{% endblock javascripts %}
