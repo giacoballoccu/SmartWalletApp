@@ -1,3 +1,5 @@
+from json import dump
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from pip._vendor import requests
@@ -23,17 +25,14 @@ def extract_api():
 #Ajax
 
 def get_rates(request):
-    input_currency = request.GET.get('currency-1')
-    output_currency = request.GET.get('currency-2')
-    url = 'https://rest.coinapi.io/v1/exchangerate/' + input_currency + '/' + output_currency
-    headers = {'X-CoinAPI-Key': '69F1583F-2188-4BD8-A106-287F3647991E'}
-    response = requests.get(url, headers=headers)
-    coins_and_rates = response.json()
+    currency1 = Valuta.objects.get(sigla=request.GET.get('currency-1'))
+    currency2 = Valuta.objects.get(sigla=request.GET.get('currency-2'))
+    rate = Valuta.converti_cambio(currency1, currency2)
 
     data = {
-        'coin1': coins_and_rates["asset_id_base"], #first currency
-        'coin2': coins_and_rates["asset_id_quote"], #second currency
-        'rates': coins_and_rates["rate"] #live value
+        'coin1': currency1.sigla, #first currency
+        'coin2': currency2.sigla, #second currency
+        'rates': rate #live value
 
     }
 

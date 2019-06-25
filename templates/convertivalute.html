@@ -45,7 +45,7 @@
 
 {% endblock %}
 
-
+{% block javascripts%}{{ block.super }}
 <script>
       $("button").click(function (e) {
        e.preventDefault();
@@ -92,4 +92,4 @@
 
     });
 
-</script>
+</script>{% endblock %}
