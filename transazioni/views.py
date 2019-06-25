@@ -13,7 +13,7 @@ from transazioni.forms import TransazioneForm
 def index(request):
     user_wallet = Wallet.objects.get(user_id=request.user)
     transazioni_inviate = Transazione.objects.filter(input_wallet=user_wallet)
-    transazioni_ricevute = Transazione.objects.filter(input_wallet=user_wallet)
+    transazioni_ricevute = Transazione.objects.filter(output_wallet=user_wallet)
     return render(request, 'transazioni.html', {'transazioni_inviate': transazioni_inviate,
                                                 'transazioni_ricevute': transazioni_ricevute, })
 
@@ -48,16 +48,16 @@ def crea_transazione(request):
             if(logged_user_conto):
                 if(logged_user_conto.importo > submitted_form.get("quantita")):
                     logged_user_conto.rimuovi_importo(quantita)
-                    logged_user_conto.update()
+                    logged_user_conto.save()
 
                     if(conto_destinatario):
                         if (conto_destinatario == logged_user_conto):  # Provvisorio
                             messages.error(request, 'Non puoi inviarti denaro da solo')
                             return render(request, 'creatransazione.html', {'form': form})
                         conto_destinatario.aggiungi_importo(quantita)
-                        conto_destinatario.update()
+                        conto_destinatario.save()
                     else:
-                        newConto = Conto.crea_conto(tipo_valuta=cryptocurrency, wallet=wallet_destinatario)
+                        newConto = Conto.crea_conto(cryptocurrency,wallet_destinatario)
                         newConto.aggiungi_importo(quantita)
                         newConto.save()
 

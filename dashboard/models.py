@@ -115,7 +115,7 @@ class Transazione(models.Model):
 
     @staticmethod
     def crea_transazione(wallet_input,wallet_output,tipo_valuta,importo):
-        return Transazione.objects.create(get_random_string(length=32),wallet_input=wallet_input, wallet_output=wallet_output, tipo_valuta=tipo_valuta, importo=importo)
+        return Transazione.objects.create(id_transazione=get_random_string(length=32),input_wallet=wallet_input, output_wallet=wallet_output, cryptocurrency=tipo_valuta, quantita=importo)
 
     def get_url(self):  #restituisce l'url dell'istanza della transazione
         None

@@ -27,9 +27,9 @@
 
                 <tbody>
 
-                {% for transazione in transazioni_ricevute %}
+                {% for transazione in transazioni_inviate %}
                     <tr>
-                        <th scope="row">{{ transazione.id }}</th>
+                        <th scope="row">{{ transazione.id_transazione }}</th>
                         <td>{{ transazione.data }}</td>
                         <td>{{ transazione.input_wallet }}</td>
                         <td>{{ transazione.output_wallet }}</td>

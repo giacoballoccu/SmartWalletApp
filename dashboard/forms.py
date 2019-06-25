@@ -33,3 +33,13 @@ class UserRegisterForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
+
+class NewContoForm(forms.ModelForm):
+
+    class Meta:
+        model = Conto
+        fields = ['tipo_valuta']
+
+
+    def __init__(self, *args, **kwargs):
+        super(NewContoForm, self).__init__(*args, **kwargs)
