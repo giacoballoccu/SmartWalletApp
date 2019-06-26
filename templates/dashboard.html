@@ -3,47 +3,7 @@
 {% block title %}
     DashBoard - Smartwallet
 {% endblock %}
-{% block navbar %}<!-- NAVIGATION BAR-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-      <!-- Toggle button-->
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse justify-content-start" id="navbar">
-          <ul class="navbar-nav"><li class="nav-item active">
-                <a class="nav-link" href="{% url 'aggiungi_conto' %}">Aggiungi Cryptovaluta <span class="sr-only">(current)</span></a>
-            </li>
-
-
-
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'transazioni' %}">Transazioni </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'converti_valute' %}">Tassi di Cambio </a>
-            </li>
-
-        </ul>
-      </div>
-
-
-      <!-- Log out button-->
-      <div class="collapse navbar-collapse  justify-content-end" id="navbar">
-          <ul class="navbar-nav">
-
-              <!-- Divider for toggle mode-->
-              <div class="dropdown-divider"></div>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">Log out </a>
-                </li>
-          </ul>
-      </div>
-
-</nav>{% endblock %}
 {% block content %}
     <div class="col py-5 px-md-5 bordered col-example">
 
@@ -67,7 +27,7 @@
                   <td>{{ conto.tipo_valuta.nome }}</td>
                   <td>{{ conto.importo }}</td>
                     <td>
-                        <a {# href="{ url 'modifica_importo_conto'  value = 0%}" #}><i class="fas fa-pencil-alt" style="padding-left: 20px;"></i></a>
+                        <a {# href="{ url 'modifica_importo_conto'  value = 0%}" #}><i class="fas fa-pencil-alt"></i></a>
                   </td>
                   <td>
                       <a href="" onclick="return confirm('Sei sicuro di voler eliminare questo articolo?')">
@@ -83,7 +43,20 @@
             </table>
 
             <h3>Totale: </h3>
-            <h3>{{ totale }}</h3>
+            <h3>{{ totale }}
+            {% if cambio_selezionato == 'USD' %}${% elif cambio_selezionato == 'EUR' %}€{% else %}{{ cambio_selezionato }}{% endif %}
+            </h3>
+
         </div>
+<a href="{% url 'aggiungi_conto' %}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true" >Aggiungi Cryptovaluta</a>
 </div>
+{% endblock %}
+
+{% block footer %}
+        {% include 'partials/footer.html' %}
+{% endblock %}
+
+{% block javascripts %}
+        {{ block.super }}
+        {% include 'partials/update_rates_script.html' %}
 {% endblock %}

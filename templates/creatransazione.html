@@ -8,10 +8,11 @@
 
 {% block content %}
 
-<div class="login-page form">
+<div class="login-page form bg-dark">
 
         <form method="POST" novalidate>
             {% csrf_token %}
+
             <fieldset class="form-group label-registrati">
                 <h2 class="registrati">Invia Denaro</h2>
                 {{ form| crispy }}

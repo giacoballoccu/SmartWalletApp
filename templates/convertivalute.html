@@ -6,8 +6,8 @@
 
 {% block content %}
 
-
-    <div class="jumbotron">
+    <div class="login-page">
+        <div class="jumbotron">
         <div class="container">
             <h2>Currency Calculator</h2>
             <p class="lead">Convert the currency</p>
@@ -43,9 +43,14 @@
         </div>
     </div>
 
+    </div>
+
+
 {% endblock %}
 
+{% block footer %}{% include 'partials/footer.html' %}{% endblock %}
 
+{% block javascripts%}{{ block.super }}
 <script>
       $("button").click(function (e) {
        e.preventDefault();
@@ -91,5 +96,6 @@
     });
 
     });
-
 </script>
+    {% include 'partials/update_rates_script.html' %}
+{% endblock javascripts %}

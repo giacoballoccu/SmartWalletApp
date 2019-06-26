@@ -7,8 +7,13 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
 </head>
+
 <body>
-{% include 'partials/header.html' %}
+{% if "login" in request.path %}
+    {% include 'partials/header.html' %}
+        {%  elif "registrazione" in request.path %}
+    {% include 'partials/header.html' %}
+{% endif %}
     {% block navbar %}
         {% include 'partials/navbar.html' %}
     {% endblock navbar %}
@@ -25,11 +30,11 @@
         </div>
         </div>
 
-    {% block content %}
-
-    {% endblock %}
+<main id="main_conteiner">{% block content %}{% endblock %}</main>
+{% block footer %}{% endblock %}
 </body>
 {%block javascripts%}
         {%include 'partials/javascript.html'%}
 {%endblock%}
+
 </html>

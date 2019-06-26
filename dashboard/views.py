@@ -4,7 +4,7 @@ import decimal
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import UserRegisterForm
+from .forms import UserRegisterForm, NewContoForm
 from .models import *
 from django.utils.crypto import get_random_string
 from pip._vendor import requests
@@ -15,7 +15,7 @@ NUMBER_OF_COINS = 25
 @login_required
 def dashboard(request):
     user_wallet = Wallet.objects.get(user_id=request.user)
-    conti = Conto.objects.filter(wallet_associato=user_wallet)
+    conti = Conto.objects.filter(wallet_associato=user_wallet).order_by('-tipo_valuta').reverse()
     if(conti):
         totale = conti[0].calcola_totale_conto(user_wallet.cambio_selezionato)
     else:
@@ -25,13 +25,34 @@ def dashboard(request):
     return render(request, 'dashboard.html', {
         'conti': conti,
         'totale': '%.9f'%totale,
+        'cambio_selezionato': user_wallet.cambio_selezionato.sigla,
         'ultimo_aggiornamento': user_wallet.ultimo_aggiornamento
     })
 
 
 @login_required
 def aggiungi_conto(request):
-    return render(request, 'aggiungiconto.html')
+    if request.method == 'POST':
+        form = NewContoForm(request.POST)
+        if form.is_valid():
+            submitted_form = form.cleaned_data
+            currency = submitted_form.get("tipo_valuta")
+            logged_user_wallet = Wallet.objects.get(user_id=request.user.id)
+            try:
+                logged_user_conto = Conto.objects.get(wallet_associato=logged_user_wallet, tipo_valuta=currency)
+            except Conto.DoesNotExist:
+                logged_user_conto = None
+            if(logged_user_conto):
+                messages.error(request, 'Hai già un conto associato a questa moneta!')
+                return render(request, 'aggiungiconto.html', {'form': NewContoForm()})
+            else:
+                newConto = Conto.crea_conto(tipo_valuta=currency, wallet=logged_user_wallet)
+                newConto.save()
+                messages.success(request, 'Conto creato con successo!')
+                redirect(dashboard)
+    else:
+        form = NewContoForm()
+    return render(request, 'aggiungiconto.html', {'form': form})
 
 
 @login_required
@@ -39,9 +60,7 @@ def rimuovi_conto(request):
     return render(request, 'dashboard.html')
 
 
-@login_required
-def modifica_importo(request):
-    return render(request, 'modificaconto.html')
+
 
 
 
@@ -49,34 +68,7 @@ def modifica_importo(request):
 def modifica_cambio_dashboard(request, tipo_valuta):
     return redirect(dashboard)
 
-#Utility
 
-#Questo metodo è stato utilizzato per inizializzare il db delle valute
-def inizializza_valute():
-    url = 'https://rest.coinapi.io/v1/assets'
-    headers = {'X-CoinAPI-Key': '73034021-0EBC-493D-8A00-E0F138111F41'}
-    response = requests.get(url, headers=headers)
-    assets_list = sorted(response.json()[:NUMBER_OF_COINS], key=lambda k: k['data_trade_count'], reverse=True)
-    for coin in assets_list:
-        newValuta = Valuta.crea_valuta(coin['asset_id'], get_rate_dollar(coin['asset_id']), coin['name'])
-        newValuta.save()
-
-def aggiorna_coin_rates():
-    valute = Valuta.objects.all()
-    for valuta in valute:
-        valuta.cambio = get_rate_dollar(valuta.sigla)
-        valuta.save(update_fields=["cambio"])
-
-
-def get_rate_dollar(coin1):
-    if(coin1 == "USD"):
-        return 1.0
-    else:
-        url = 'https://rest.coinapi.io/v1/exchangerate/' + coin1 + '/' + 'USD'
-        headers = {'X-CoinAPI-Key': '69F1583F-2188-4BD8-A106-287F3647991E'}
-        response = requests.get(url, headers=headers)
-        coins_and_rates = response.json()
-        return '%.9f'%decimal.Decimal(coins_and_rates['rate'])
 
 #Security
 def registrazione(request):

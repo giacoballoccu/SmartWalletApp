@@ -1,0 +1,24 @@
+<script>      $("#refresh").click(function (e) {
+       e.preventDefault();
+
+    $.ajax({
+      url: '{% url "update_rates" %}',
+      type: 'GET',
+
+      success: function (data) {
+              var ultimoAggiornamentoText = document.querySelector('.ultimoaggiornamentotext');
+              ultimoAggiornamentoText.innerHTML = data.data_ultimo_aggiornamento;
+              $(this).removeClass('icn-spinner');
+              $(this).innerHTML = "<i class=\"fas fa-check\"></i>";
+              alert("Tassi di cambio aggiornati in tempo reale");
+      },
+      error: function (data) {
+              $("#refresh").removeClass('icn-spinner');
+              $("#refresh").removeClass('fa-sync');
+              $("#refresh").addClass('fa-times');
+              alert("Non è possibile effettuare più di un refresh per giorno")
+        }
+    });
+
+    });
+</script>
