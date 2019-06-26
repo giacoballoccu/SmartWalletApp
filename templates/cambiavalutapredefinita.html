@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% block title %}
+   Cambia Valuta Predefinita - SmartWallet
+{% endblock %}
+
+
+{% block content %}
+
+<div class="login-page form">
+
+        <form method="POST" novalidate>
+            {% csrf_token %}
+            <fieldset class="form-group label-registrati">
+                <h2 class="registrati">Valuta Predefinita</h2>
+                {{ form| crispy }}
+            </fieldset>
+
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit" >Modifica</button>
+            </div>
+        </form>
+
+
+</div>
+    </div>
+
+{% endblock %}

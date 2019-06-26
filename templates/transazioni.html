@@ -36,7 +36,7 @@
                         <td>{{ transazione.cryptocurrency }}</td>
                         <td>{{ transazione.quantita }}</td>
                         <td>
-                            <a href="#">
+                            <a href="{% url 'dettaglio_transazione' transazione.id %}">
                                 <i class="fa fa-search" aria-hidden="true">
                                 </i>
                             </a>
@@ -76,7 +76,7 @@
                         <td>{{ transazione.cryptocurrency }}</td>
                         <td>{{ transazione.quantita }}</td>
                         <td>
-                            <a href="#">
+                            <a href="{% url 'dettaglio_transazione' transazione.id %}">
                                 <i class="fa fa-search" aria-hidden="true">
                                 </i>
                             </a>
