@@ -19,8 +19,9 @@ def index(request):
 
 
 @login_required
-def dettaglio_transazione(request):
-    return
+def dettaglio_transazione(request, id):
+    transazione = Transazione.objects.get(id=id)
+    return render(request, 'dettaglitransazione.html', {'transazione': transazione})
 
 
 @login_required
@@ -52,7 +53,7 @@ def crea_transazione(request):
 
                     if(conto_destinatario):
                         if (conto_destinatario == logged_user_conto):  # Provvisorio
-                            messages.error(request, 'Non puoi inviarti denaro da solo')
+                            messages.warning(request, 'Non puoi inviarti denaro da solo')
                             return render(request, 'creatransazione.html', {'form': form})
                         conto_destinatario.aggiungi_importo(quantita)
                         conto_destinatario.save()
@@ -66,19 +67,13 @@ def crea_transazione(request):
                     messages.success(request, 'Transazione effettuata con successo')
                     redirect(index)
                 else:
-                    messages.error(request, 'Transazione rifiutata! Non disponi di abbastanza fondi')
+                    messages.warning(request, 'Transazione rifiutata! Non disponi di abbastanza fondi')
                     return render(request, 'creatransazione.html', {'form': form})
 
             else:
-                messages.error(request, 'Transazione non effettuata! Non possiedi un conto per la moneta selezionata')
+                messages.warning(request, 'Transazione non effettuata! Non possiedi un conto per la moneta selezionata')
                 return render(request, 'creatransazione.html', {'form': form})
 
     else:
         form = TransazioneForm()
     return render(request, 'creatransazione.html', {'form': form})
-
-
-
-
-
-
