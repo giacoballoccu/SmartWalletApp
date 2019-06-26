@@ -56,20 +56,22 @@ def aggiungi_conto(request):
 
 @login_required
 def rimuovi_conto(request, id):
+    user_wallet_associato = Wallet.objects.get(user_id=request.user)
     try:
-        logged_user_conto =  Conto.objects.get(id=id)
+        logged_user_conto = Conto.objects.get(id=id, wallet_associato=user_wallet_associato)
     except Conto.DoesNotExist:
         logged_user_conto = None
-
-    if(logged_user_conto.importo > 0):
-        messages.warning(request, 'Non puoi eliminare un conto in cui possiedi denaro')
-        redirect(dashboard)
+    if(logged_user_conto):
+        if(logged_user_conto.importo > 0):
+            messages.warning(request, 'Non puoi eliminare un conto in cui possiedi denaro')
+            redirect(dashboard)
+        else:
+            logged_user_conto.delete()
+            messages.success(request, "Conto eliminato con successo")
+        return redirect(dashboard)
     else:
-        logged_user_conto.delete()
-        messages.success(request, "Conto eliminato con successo")
-    return redirect(dashboard)
-
-
+        messages.warning(request, "Il conto non esiste")
+        redirect(dashboard)
 
 
 
