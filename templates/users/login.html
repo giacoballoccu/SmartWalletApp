@@ -10,11 +10,11 @@
 {% block content %}
 
 
-<div class="login-page form ">
+<div class="login-page form">
 
         <form method="POST" novalidate>
             {% csrf_token %}
-            <fieldset class="form-group">
+            <fieldset class="form-group" style="color: black;">
                 <legend style="padding-top: 20px">Accedi</legend>
                 {{ form | crispy }}
             </fieldset>

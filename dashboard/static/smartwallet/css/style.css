@@ -35,7 +35,7 @@ header
 .form {
   position: relative;
   z-index: 1;
-  background: rgb(49,72,136);
+  background: #f2f2f2;
   max-width: 360px;
   margin: 50 auto 100px;
   padding: 45px;
@@ -45,10 +45,10 @@ header
 .form input {
   font-family: "Roboto", sans-serif;
   outline: 0;
-  background: #f2f2f2;
+  background: white;
   width: 100%;
-  border: 0;
-  margin: 0 0 15px;
+    border: 1px solid rgb(49,72,136);
+    margin: 0 0 15px;
   padding: 15px;
   box-sizing: border-box;
   font-size: 14px;
