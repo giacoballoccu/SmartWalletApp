@@ -18,6 +18,7 @@ img {
 header
 {
   background: rgb(49,72,136) ;
+
 }
 
 .login-page {
@@ -30,6 +31,7 @@ header
 .bg-blue{
 
   background: rgb(49,72,136);
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 }
 
 .form {
@@ -47,7 +49,8 @@ header
   outline: 0;
   background: white;
   width: 100%;
-    border: 1px solid rgb(49,72,136);
+    border: 0px solid rgb(49,72,136);
+   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
     margin: 0 0 15px;
   padding: 15px;
   box-sizing: border-box;

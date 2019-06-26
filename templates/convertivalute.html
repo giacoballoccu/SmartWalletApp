@@ -6,42 +6,48 @@
 
 {% block content %}
 
-    <div class="login-page">
-        <div class="jumbotron">
+    <div class="login-page form" style="margin-bottom: 50px;">
         <div class="container">
-            <h2>Currency Calculator</h2>
-            <p class="lead">Convert the currency</p>
-            <form class="form-inline">
-                <div class="form-group mb-2">
-                    <input type="number" min="0" class="form-control" id="amount"/>
-                </div>
-                <div class="form-group mx-sm-3 mb-2">
-                    <select class="form-control" id="currency-1" required>
-                        {% for crypto in lista %}
-                            <option>{{ crypto }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group mx-sm-3 mb-2">
-                    <label>convert to</label>
-                    <select class="form-control" id="currency-2" required>
-                        {% for crypto in lista %}
-                            <option>{{ crypto }}</option>
-                        {% endfor %}
-                    </select>
+
+            <h3>Convertitore di valute</h3>
+
+            <form class="">
+
+                <div class="col-12">
+                    <div class="form-group row">
+                        <input type="number" min="0" class="form-control" id="amount"/>
+
+                        <select class="mb-2 form-control" id="currency-1" required>
+                            {% for crypto in lista %}
+                                <option>{{ crypto }}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+
+                    <div class="col-12">
+                        <div class="mb-2">
+                            <label style="color: black;" class="mb-3 mt-3">converti a</label>
+
+                            <select class="form-control" id="currency-2" required>
+                                {% for crypto in lista %}
+                                    <option>{{ crypto }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </form>
-            <button id="resultbutton" class="btn calculate-btn btn-primary mb-2">Show me the result!</button>
-            <div class="result">
+
+            <button id="resultbutton" class="btn calculate-btn btn-primary mt-5">Converti</button>
+
+            <div class="" id="divResult">
                 <p>
-                    <span class="given-amount"></span>
-                    <span class="base-currency"></span>
                     <span class="final-result"></span>
                     <span class="second-currency"></span>
                 </p>
             </div>
         </div>
-    </div>
 
     </div>
 
@@ -50,52 +56,55 @@
 
 {% block footer %}{% include 'partials/footer.html' %}{% endblock %}
 
-{% block javascripts%}{{ block.super }}
-<script>
-      $("button").click(function (e) {
-       e.preventDefault();
+{% block javascripts %}{{ block.super }}
+    <script>
 
-      var amountInput = document.getElementById('amount');
-  var toShowAmount = document.querySelector('.given-amount');
-  var toShowBase = document.querySelector('.base-currency');
-  var toShowSecond = document.querySelector('.second-currency');
-  var toShowResult = document.querySelector('.final-result');
-    var amount = amountInput.value;
-    var result = 0;
-    var currency1 = $("#currency-1").val();
-    var currency2 = $("#currency-2").val();
-    $.ajax({
-      url: '{% url "get_rates" %}',
-      type: 'GET',
+        $("button").click(function (e) {
+            e.preventDefault();
 
-      data: {
-        'currency-1': currency1,
-        'currency-2': currency2,
-      },
-         dataType: 'json',
-      success: function (data) {
-            try{
-                if (data.coin1 == data.coin2){
-                    result = amount;
-                } else {
-                    result = amount * data.rates;
+            var divResult = document.getElementById('divResult');
+
+            var amountInput = document.getElementById('amount');
+            var toShowSecond = document.querySelector('.second-currency');
+            var toShowResult = document.querySelector('.final-result');
+            var amount = amountInput.value;
+            var result = 0;
+            var currency1 = $("#currency-1").val();
+            var currency2 = $("#currency-2").val();
+            $.ajax({
+                url: '{% url "get_rates" %}',
+                type: 'GET',
+
+                data: {
+                    'currency-1': currency1,
+                    'currency-2': currency2,
+                },
+                dataType: 'json',
+                success: function (data) {
+                    try {
+                        if (data.coin1 == data.coin2) {
+                            result = amount;
+                        } else {
+                            result = amount * data.rates;
+
+                        }
+                    } catch (err) {
+                        result = amount * (1 / data.rates);
+                    }
+
+                    toShowSecond.textContent = data.coin2;
+                    toShowResult.textContent = result;
+                    divResult.classList.add("form");
+                    divResult.style.marginTop = "20px";
+
+                },
+                error: function (data) {
 
                 }
-                }
-                catch(err) {
-                    result = amount * (1 / data.rates);
-                }
-            toShowAmount.innerHTML = amount;
-            toShowBase.textContent = data.coin1 + ' = ';
-            toShowSecond.textContent = data.coin2;
-            toShowResult.textContent = result;
-      },
-      error: function (data) {
 
-        }
-    });
+            });
 
-    });
-</script>
+        });
+    </script>
     {% include 'partials/update_rates_script.html' %}
 {% endblock javascripts %}
