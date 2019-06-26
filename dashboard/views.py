@@ -1,4 +1,3 @@
-
 import decimal
 
 from django.shortcuts import render, redirect
@@ -43,7 +42,7 @@ def aggiungi_conto(request):
             except Conto.DoesNotExist:
                 logged_user_conto = None
             if(logged_user_conto):
-                messages.error(request, 'Hai già un conto associato a questa moneta!')
+                messages.warning(request, 'Hai già un conto associato a questa moneta!')
                 return render(request, 'aggiungiconto.html', {'form': NewContoForm()})
             else:
                 newConto = Conto.crea_conto(tipo_valuta=currency, wallet=logged_user_wallet)
@@ -56,8 +55,19 @@ def aggiungi_conto(request):
 
 
 @login_required
-def rimuovi_conto(request):
-    return render(request, 'dashboard.html')
+def rimuovi_conto(request, id):
+    try:
+        logged_user_conto =  Conto.objects.get(id=id)
+    except Conto.DoesNotExist:
+        logged_user_conto = None
+
+    if(logged_user_conto.importo > 0):
+        messages.warning(request, 'Non puoi eliminare un conto in cui possiedi denaro')
+        redirect(dashboard)
+    else:
+        logged_user_conto.delete()
+        messages.success(request, "Conto eliminato con successo")
+    return redirect(dashboard)
 
 
 
@@ -85,9 +95,3 @@ def registrazione(request):
     else:
         form = UserRegisterForm()
     return render(request, 'users/registrazione.html', {'form': form, 'title': "Registrati - Smartwallet"})
-
-
-
-
-
-
