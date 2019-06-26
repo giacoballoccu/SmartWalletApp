@@ -38,14 +38,16 @@
 
 
             </table>
-
-            <h3>Totale: </h3>
-            <h3>{{ totale }}
+            <hr>
+            <h3>Totale: {{ totale }}
             {% if cambio_selezionato == 'USD' %}${% elif cambio_selezionato == 'EUR' %}€{% else %}{{ cambio_selezionato }}{% endif %}
-            </h3>
+             </h3>
+
 
         </div>
 <a href="{% url 'aggiungi_conto' %}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true" >Aggiungi Cryptovaluta</a>
+    <a href="{% url 'selezione_cambio' %}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true" >Cambia valuta predefinita</a>
+
 </div>
 {% endblock %}
 

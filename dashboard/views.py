@@ -3,7 +3,7 @@ import decimal
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import UserRegisterForm, NewContoForm
+from .forms import UserRegisterForm, NewContoForm, ChangeDefaultCurrency
 from .models import *
 from django.utils.crypto import get_random_string
 from pip._vendor import requests
@@ -77,8 +77,19 @@ def rimuovi_conto(request, id):
 
 
 @login_required
-def modifica_cambio_dashboard(request, tipo_valuta):
-    return redirect(dashboard)
+def modifica_cambio_dashboard(request):
+    if request.method == 'POST':
+        form = ChangeDefaultCurrency(request.POST)
+        if form.is_valid():
+            cambio_selezionato = form.cleaned_data.get('cambio_selezionato')
+            user_wallet = Wallet.objects.get(user_id=request.user)
+            user_wallet.cambio_selezionato = cambio_selezionato
+            user_wallet.save()
+            messages.success(request, 'Valuta predefinita cambiata in ' + cambio_selezionato.sigla)
+            return redirect(dashboard)
+    else:
+        form = ChangeDefaultCurrency()
+    return render(request, 'cambiavalutapredefinita.html', {'form': form})
 
 
 

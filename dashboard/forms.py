@@ -43,3 +43,12 @@ class NewContoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(NewContoForm, self).__init__(*args, **kwargs)
+
+class ChangeDefaultCurrency(forms.ModelForm):
+
+    class Meta:
+        model = Wallet
+        fields = ['cambio_selezionato']
+
+    def __init__(self, *args, **kwargs):
+        super(ChangeDefaultCurrency, self).__init__(*args, **kwargs)

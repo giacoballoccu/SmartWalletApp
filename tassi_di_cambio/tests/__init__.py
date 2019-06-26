@@ -1,1 +1,1 @@
-from . import *
+from .tests_acceptance import *
