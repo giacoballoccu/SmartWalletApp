@@ -17,8 +17,7 @@
     {% block navbar %}
         {% include 'partials/navbar.html' %}
     {% endblock navbar %}
-            <div class="row">
-        <div class="col-md-8">
+
           {% if messages %}
             {% for message in messages %}
               <div class="alert alert-{{ message.tags }}">
@@ -27,8 +26,8 @@
             {% endfor %}
           {% endif %}
 
-        </div>
-        </div>
+
+
 
 <main id="main_conteiner">{% block content %}{% endblock %}</main>
 {% block footer %}{% endblock %}

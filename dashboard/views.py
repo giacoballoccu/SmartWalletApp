@@ -1,10 +1,9 @@
-
 import decimal
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .forms import UserRegisterForm, NewContoForm
+from .forms import UserRegisterForm, NewContoForm, ChangeDefaultCurrency
 from .models import *
 from django.utils.crypto import get_random_string
 from pip._vendor import requests
@@ -43,7 +42,7 @@ def aggiungi_conto(request):
             except Conto.DoesNotExist:
                 logged_user_conto = None
             if(logged_user_conto):
-                messages.error(request, 'Hai già un conto associato a questa moneta!')
+                messages.warning(request, 'Hai già un conto associato a questa moneta!')
                 return render(request, 'aggiungiconto.html', {'form': NewContoForm()})
             else:
                 newConto = Conto.crea_conto(tipo_valuta=currency, wallet=logged_user_wallet)
@@ -56,17 +55,41 @@ def aggiungi_conto(request):
 
 
 @login_required
-def rimuovi_conto(request):
-    return render(request, 'dashboard.html')
-
-
+def rimuovi_conto(request, id):
+    user_wallet_associato = Wallet.objects.get(user_id=request.user)
+    try:
+        logged_user_conto = Conto.objects.get(id=id, wallet_associato=user_wallet_associato)
+    except Conto.DoesNotExist:
+        logged_user_conto = None
+    if(logged_user_conto):
+        if(logged_user_conto.importo > 0):
+            messages.warning(request, 'Non puoi eliminare un conto in cui possiedi denaro')
+            redirect(dashboard)
+        else:
+            logged_user_conto.delete()
+            messages.success(request, "Conto eliminato con successo")
+        return redirect(dashboard)
+    else:
+        messages.warning(request, "Il conto non esiste")
+        redirect(dashboard)
 
 
 
 
 @login_required
-def modifica_cambio_dashboard(request, tipo_valuta):
-    return redirect(dashboard)
+def modifica_cambio_dashboard(request):
+    if request.method == 'POST':
+        form = ChangeDefaultCurrency(request.POST)
+        if form.is_valid():
+            cambio_selezionato = form.cleaned_data.get('cambio_selezionato')
+            user_wallet = Wallet.objects.get(user_id=request.user)
+            user_wallet.cambio_selezionato = cambio_selezionato
+            user_wallet.save()
+            messages.success(request, 'Valuta predefinita cambiata in ' + cambio_selezionato.sigla)
+            return redirect(dashboard)
+    else:
+        form = ChangeDefaultCurrency()
+    return render(request, 'cambiavalutapredefinita.html', {'form': form})
 
 
 
@@ -85,9 +108,3 @@ def registrazione(request):
     else:
         form = UserRegisterForm()
     return render(request, 'users/registrazione.html', {'form': form, 'title': "Registrati - Smartwallet"})
-
-
-
-
-
-
