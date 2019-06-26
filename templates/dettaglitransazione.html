@@ -13,38 +13,38 @@
                 <!-- Columns are always 50% wide, on mobile and desktop -->
                   <div class="col-lg-12 shadow-lg p-3 mb-5 bg rounded">
                     <h4>ID transazione</h4>
-                    <p class="text-faded">nSòISJDFN</p>
+                    <p class="text-faded">{{ transazione.id_transazione }}</p>
                   </div>
 
                   <div class="col-lg-12 shadow-lg p-3 mb-5 bg rounded">
                     <h4 >Data</h4>
-                    <p class="text-faded">12-12-12</p>
+                    <p class="text-faded">{{ transazione.data }}</p>
                   </div>
 
                   <div class="col-lg-12 shadow-lg p-3 mb-5 bg rounded">
-                    <h4>Il tuo Wallet</h4>
-                    <p class="text-faded">ASFDIUH19</p>
+                    <h4>Mittente</h4>
+                    <p class="text-faded">{{ transazione.input_wallet }}</p>
                   </div>
 
                  <div class="col-lg-12 shadow-lg p-3 mb-5 bg rounded">
                     <h4>Destinatario</h4>
-                    <p class="text-faded">QW9082UEJH</p>
+                    <p class="text-faded">{{ transazione.output_wallet }}</p>
                 </div>
 
 
                 <div class="col-lg-12 shadow-lg p-3 mb-5 bg rounded">
                     <h4>Criptovaluta</h4>
-                    <p class="text-faded">BTC</p>
+                    <p class="text-faded">{{ transazione.cryptocurrency }}</p>
                 </div>
 
                 <div class="col-lg-12 shadow-lg p-3 mb-5 bg rounded">
                     <h4>Totale</h4>
-                    <p class="text-faded">10</p>
+                    <p class="text-faded">{{ transazione.quantita }}</p>
                 </div>
             </div>
 
         <!-- BOTTONE CREA TRANSAZIONE-->
-        <a href="#" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Indietro</a>
+        <a href="{% url 'transazioni' %}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Indietro</a>
 
     </div>
 </div>
