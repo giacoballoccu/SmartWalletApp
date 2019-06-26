@@ -15,16 +15,16 @@
         <form method="POST" novalidate>
             {% csrf_token %}
             <fieldset class="form-group" style="color: black;">
-                <legend style="padding-top: 20px">Accedi</legend>
+                <legend style="padding: 20px; ">Accedi</legend>
                 {{ form | crispy }}
             </fieldset>
             <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Accedi</button>
+                <button style="margin-top: 20px" class="btn btn-outline-info" type="submit">Accedi</button>
             </div>
         </form>
 
-        <div class="border-top pt-3">
-            <small class="text-muted">
+        <div class="border-top pt-3" style="color: black; >
+            <small class="text-muted" >
                 Non hai un account? <a class="ml-2" href="{% url 'registrazione' %}">Registrati</a>
             </small>
         </div>
