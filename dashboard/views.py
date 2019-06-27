@@ -103,7 +103,7 @@ def registrazione(request):
             newWallet = Wallet.crea_wallet(get_random_string(length=WALLET_ID_NUMBER_OF_CHAR), User.objects.get(username=username), Valuta.objects.get(sigla='USD'))
             newWallet.save()
 
-            messages.success(request, 'Account creato con successo! Benvenuto {username}!')
+            messages.success(request, 'Account creato con successo! Benvenuto' + username + '!')
             return redirect(dashboard)
     else:
         form = UserRegisterForm()

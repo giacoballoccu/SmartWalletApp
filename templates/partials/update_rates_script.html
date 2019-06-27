@@ -8,8 +8,10 @@
       success: function (data) {
               var ultimoAggiornamentoText = document.querySelector('.ultimoaggiornamentotext');
               ultimoAggiornamentoText.innerHTML = data.data_ultimo_aggiornamento;
-              $(this).removeClass('icn-spinner');
-              $(this).innerHTML = "<i class=\"fas fa-check\"></i>";
+              $("#refresh").removeClass('icn-spinner');
+              $("#refresh").removeClass('fa-sync');
+              $("#refresh").addClass('fa-check');
+
               alert("Tassi di cambio aggiornati in tempo reale");
       },
       error: function (data) {
