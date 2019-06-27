@@ -1,1 +1,1 @@
-from .tests_acceptance import *
+from .tests_accettazione import *
