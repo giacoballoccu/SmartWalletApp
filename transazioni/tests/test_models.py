@@ -66,6 +66,3 @@ class TransazioniModelTest(TestCase):
     def test_creazione_verso_se_stesso(self):
         self.assertRaises(
             Exception, Transazione.crea_transazione(self.wallet_luigi, self.wallet_luigi, self.bitcoin, 0.3))
-
-    def test_get_url(self):
-        None

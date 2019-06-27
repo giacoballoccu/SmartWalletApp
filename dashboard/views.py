@@ -86,7 +86,7 @@ def modifica_cambio_dashboard(request):
             user_wallet.cambio_selezionato = cambio_selezionato
             user_wallet.save()
             messages.success(request, 'Valuta predefinita cambiata in ' + cambio_selezionato.sigla)
-            return redirect(dashboard)
+            return redirect('dashboard')
     else:
         form = ChangeDefaultCurrency()
     return render(request, 'cambiavalutapredefinita.html', {'form': form})

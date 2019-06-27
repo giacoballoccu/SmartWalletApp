@@ -42,19 +42,15 @@ class WalletModelTest(TestCase):
         self.assertEqual(self.wallet_mario.conti.get(tipo_valuta=self.bitcoin).importo, 1.0)
 
     def test_aggiunta_conto_con_funzione(self):
-        self.wallet_mario.aggiungi_conto(self.bitcoin, 1.0)
+        self.wallet_mario.aggiungi_conto(self.bitcoin)
         # controlla che il conto sia stato creato
         self.assertEqual(self.wallet_mario.conti.all().count(), 1)
         # controlla che ci sia l'importo nel conto aggiunto
-        self.assertEqual(self.wallet_mario.conti.get(tipo_valuta=self.bitcoin).importo, 1.0)
-
-    def test_aggiunta_conto_di_valuta_uguale_a_esistente(self):
-        self.wallet_mario.aggiungi_conto(self.bitcoin, 1.0)
-        self.assertRaises(Exception, lambda: self.wallet_mario.aggiungi_conto(self.bitcoin, 1.0))
+        self.assertEqual(self.wallet_mario.conti.get(tipo_valuta=self.bitcoin).importo, 0)
 
     def test_get_conti(self):
-        self.wallet_mario.aggiungi_conto(self.bitcoin, 1.0)
-        self.assertEqual(self.wallet_mario.conti.get(tipo_valuta=self.bitcoin).importo, 1.0)
+        self.wallet_mario.aggiungi_conto(self.bitcoin)
+        self.assertEqual(self.wallet_mario.conti.get(tipo_valuta=self.bitcoin).importo)
         
     def test_modifica_cambio_selezionato(self):
         self.assertEqual(self.wallet_mario.cambio_selezionato, self.dollaro)
@@ -135,10 +131,10 @@ class ContoModelTest(TestCase):
         self.assertEqual(self.conto.importo, 1)
 
     def test_creazione_con_funzione(self):
-        conto = Conto.crea_conto(self.euro, 100.0, self.wallet_mario)
+        conto = Conto.crea_conto(self.euro, self.wallet_mario)
         self.assertEqual(conto.tipo_valuta, self.euro)
         self.assertEqual(conto.wallet_associato, self.wallet_mario)
-        self.assertEqual(conto.importo, 100.0)
+        self.assertEqual(conto.importo, 0)
 
     def test_creazione_conto_di_tipo_esistente(self):
         self.assertRaises(Exception, lambda: Conto.crea_conto(self.bitcoin, 1.0, self.wallet_mario))

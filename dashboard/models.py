@@ -40,8 +40,8 @@ class Wallet(models.Model):
             totale += conto.calcola_totale_conto(self.cambio_selezionato)
         return totale
 
-    def aggiungi_conto(self, valuta, importo):
-        Conto.crea_conto(valuta, importo, self)
+    def aggiungi_conto(self, valuta):
+        Conto.crea_conto(valuta, self)
 
     def rimuovi_conto(self, valuta):
         self.conti.get(tipo_valuta=valuta).delete()

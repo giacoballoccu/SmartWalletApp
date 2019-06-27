@@ -8,11 +8,11 @@ from dashboard.models import *
 
 class UtenteCheAccedeAllaPropriaDashboard(TestCase):
     def setUp(self):
-        self.BTC = Valuta.objects.create(codice='BTC', cambio=8000, nome='Bitcoin')
-        self.USD = Valuta.objects.create(codice='USD', cambio=1, nome='Dollaro')
+        self.BTC = Valuta.objects.create(sigla='BTC', cambio=8000, nome='Bitcoin')
+        self.USD = Valuta.objects.create(sigla='USD', cambio=1, nome='Dollaro')
         self.mario = User.objects.create_user(username='mariorossi', password='MarioRossi00')
-        self.mario_wallet = Wallet.objects.create(user_id=self.mario, valuta_predefinita=self.USD)
-        self.conto_btc_mario = Conto.objects.create(wallet_id=self.mario_wallet, quantita=1.0, valuta=self.BTC)
+        self.mario_wallet = Wallet.objects.create(user_id=self.mario, cambio_selezionato=self.USD)
+        self.conto_btc_mario = Conto.objects.create(wallet_associato=self.mario_wallet, importo=1.0, tipo_valuta=self.BTC)
 
     def test_get_page_logged_user(self):
         self.client.login(username="mariorossi", password="MarioRossi00")
@@ -24,7 +24,7 @@ class UtenteCheAccedeAllaPropriaDashboard(TestCase):
     def test_get_page_unlogged_user(self):
         response = self.client.get(reverse('dashboard'))
         self.assertEqual(response.status_code, 302)
-        self.assertTemplateUsed(response, 'login.html')
+        self.assertTemplateUsed(response, 'logout.html')
 
     def test_conti_list(self):
         self.client.login(username="mariorossi", password="MarioRossi00")
@@ -33,8 +33,8 @@ class UtenteCheAccedeAllaPropriaDashboard(TestCase):
         self.assertTemplateUsed(response, 'dashboard.html')
         self.assertIsNotNone(response.context['conti'])
         # controllo esattezza array conti passati al template
-        self.assertEqual(response.context['conti'].lenth, 1)
-        self.assertEqual(response.context['conti'][0].valuta, self.BTC)
+        self.assertEqual(len(response.context['conti']), 1)
+        self.assertEqual(response.context['conti'][0].tipo_valuta, self.BTC)
         self.assertEqual(response.context['conti'][0].importo, 1)
 
     def test_totale_wallet(self):
@@ -42,25 +42,25 @@ class UtenteCheAccedeAllaPropriaDashboard(TestCase):
         response = self.client.get(reverse('dashboard'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'dashboard.html')
-        self.assertEqual(response.context['totale_wallet'], '%.9f' % (self.conto_btc_mario.importo*self.BTC.cambio))
+        self.assertEqual(response.context['totale'], '%.9f' % (self.conto_btc_mario.importo*self.BTC.cambio))
 
-    def test_modifica_valuta_predefinita(self):
+    def test_modifica_tipo_valuta_predefinita(self):
         self.client.login(username="mariorossi", password="MarioRossi00")
         response = self.client.post(
-            reverse('seleziona_cambio'), {'valuta': self.BTC})
+            reverse('selezione_cambio'), {'tipo_valuta': self.BTC})
         self.assertRedirects(response, reverse('dashboard'))
-        self.assertEqual(response.context['valuta_predefinita'], self.BTC)
+        self.assertEqual(response.context['cambio_selezionato'], self.BTC)
         self.assertEqual(response.context['totale_wallet'], self.conto_btc_mario.importo)
 
 
 class UtenteCheAggiungeUnConto(TestCase):
     def setUp(self):
-        self.BTC= Valuta.objects.create(codice='BTC', cambio=8000,nome='Bitcoin')
-        self.USD= Valuta.objects.create(codice='USD', cambio=1, nome='Dollaro')
+        self.BTC= Valuta.objects.create(sigla='BTC', cambio=8000,nome='Bitcoin')
+        self.USD= Valuta.objects.create(sigla='USD', cambio=1, nome='Dollaro')
         self.mario = User.objects.create_user(username='mariorossi',password='MarioRossi00')
         self.luigi = User.objects.create_user(username='luigibiasi',password='LuigiBiasi01')
-        self.mario_wallet = Wallet.objects.create(user_id=self.mario, valuta_predefinita=self.USD)
-        self.conto_btc_mario = Conto.objects.create(wallet_id=self.mario_wallet, quantita=0.0, valuta=self.BTC)
+        self.mario_wallet = Wallet.objects.create(user_id=self.mario, cambio_selezionato=self.USD)
+        self.conto_btc_mario = Conto.objects.create(wallet_associato=self.mario_wallet, importo=0.0, tipo_valuta=self.BTC)
 
     def test_get_page_aggiunta_conto(self):
         self.client.login(username="mariorossi", password="MarioRossi00")
@@ -71,38 +71,35 @@ class UtenteCheAggiungeUnConto(TestCase):
 
     def test_post_page_aggiunta_conto(self):
         self.client.login(username="mariorossi", password="MarioRossi00")
-        data = {'valuta': 'USD', 'importo': 100}
-        form_data = NewContoForm(data)
+        data = {'tipo_valuta': self.USD}
+        form_data = NewContoForm(data = data)
         response = self.client.post(reverse('aggiungi_conto'), form_data)
         self.assertRedirects(response, reverse('dashboard'))
         self.assertTemplateUsed(response, 'dashboard.html')
-        self.assertEqual(response.context['conti'], Conto.objects.get(wallet_id=self.mario_wallet,valuta=self.USD))
+        self.assertEqual(response.context['conti'], Conto.objects.get(wallet_associato=self.mario_wallet,tipo_valuta=self.USD))
 
     def test_post_page_aggiunta_conto_gia_esistente(self):
         self.client.login(username="mariorossi", password="MarioRossi00")
-        data = {'valuta': 'BTC', 'importo': 10}
-        form_data = NewContoForm(data)
-        response = self.client.post(reverse('aggiungi_conto'), form_data)
+        response = self.client.post("/aggiungi_conto", {'tipo_valuta': self.BTC})
         self.assertRedirects(response, reverse('aggiungi_conto'))
         self.assertTemplateUsed(response, 'aggiungi_conto.html')
         self.assertIsNotNone(response.context['message'])
         response = self.client.get(reverse('dashboard'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'dashboard.html')
-        self.assertNotContains(response.context['conti'], Conto(data))
-
+        self.assertNotContains(len(response.context['conti']),2)
 
 class UtenteCheRimuoveUnConto(TestCase):
     def setUp(self):
-        self.BTC = Valuta.objects.create(codice='BTC', cambio=8000, nome='Bitcoin')
-        self.USD = Valuta.objects.create(codice='USD', cambio=1, nome='Dollaro')
+        self.BTC = Valuta.objects.create(sigla='BTC', cambio=8000, nome='Bitcoin')
+        self.USD = Valuta.objects.create(sigla='USD', cambio=1, nome='Dollaro')
         self.mario = User.objects.create_user(username='mariorossi', password='MarioRossi00')
         self.luigi = User.objects.create_user(username='luigibiasi', password='LuigiBiasi01')
-        self.mario_wallet = Wallet.objects.create(user_id=self.mario, valuta_predefinita=self.USD)
-        self.luigi_wallet = Wallet.objects.create(user_id=self.luigi, valuta_predefinita=self.USD)
-        self.conto_btc_mario = Conto.objects.create(wallet_id=self.mario_wallet, quantita=0.0, valuta=self.BTC)
-        self.conto_usd_mario = Conto.objects.create(wallet_id=self.mario_wallet, quantita=0.0, valuta=self.USD)
-        self.conto_btc_luigi = Conto.objects.create(wallet_id=self.luigi, quantita=0.0, valuta=self.BTC)
+        self.mario_wallet = Wallet.objects.create(user_id=self.mario, cambio_selezionato=self.USD)
+        self.luigi_wallet = Wallet.objects.create(user_id=self.luigi, cambio_selezionato=self.USD)
+        self.conto_btc_mario = Conto.objects.create(wallet_associato=self.mario_wallet, importo=0.0, tipo_valuta=self.BTC)
+        self.conto_usd_mario = Conto.objects.create(wallet_associato=self.mario_wallet, importo=0.0, tipo_valuta=self.USD)
+        self.conto_btc_luigi = Conto.objects.create(wallet_associato=self.luigi, importo=0.0, tipo_valuta=self.BTC)
 
     def test_post_page_rimozione_conto(self):
         self.client.login(username="mariorossi", password="MarioRossi00")
@@ -122,7 +119,7 @@ class UtenteCheRimuoveUnConto(TestCase):
         response = self.client.post(reverse('rimuovi_conto', self.conto_btc_luigi))
         self.assertEqual(response.status_code, 302)
         self.assertTemplateUsed(response, 'dashboard.html')
-        self.assertContains(response.context['conti'], Conto(valuta=self.BTC))
+        self.assertContains(response.context['conti'], Conto(tipo_valuta=self.BTC))
         self.assertContains(response.context['message'],'non è il tuo conto')
 
     def test_post_page_rimuovi_conto_non_vuoto(self):
