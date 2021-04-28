@@ -5,7 +5,7 @@ from json import dump
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from pip._vendor import requests
+import requests
 from django.http import JsonResponse
 
 from dashboard.models import Valuta, Wallet

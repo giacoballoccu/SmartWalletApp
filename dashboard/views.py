@@ -6,7 +6,7 @@ from django.contrib import messages
 from .forms import UserRegisterForm, NewContoForm, ChangeDefaultCurrency
 from .models import *
 from django.utils.crypto import get_random_string
-from pip._vendor import requests
+import requests
 
 WALLET_ID_NUMBER_OF_CHAR = 32
 NUMBER_OF_COINS = 25

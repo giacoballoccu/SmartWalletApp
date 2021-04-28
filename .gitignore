@@ -1,5 +1,8 @@
 .idea/
-venv/
+.venv/
 db.sqlite3
 **/migrations/
 !**/migrations/__init__.py
+*.pyc
+.idea
+*.xml

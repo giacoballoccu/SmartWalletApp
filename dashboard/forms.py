@@ -3,8 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 from .models import Wallet, Conto
-from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.utils.translation import gettext as _
+
 
 
 class WalletAdminForm(forms.ModelForm):
